@@ -22,4 +22,27 @@ package com.ghostwalker18.schedulePATC
  * @since 1.0
  */
 interface IConverter {
+    /**
+     * Этот метод используется для обработки файла расписания первого корпуса на Первомайском пр.
+     *
+     * @param pdfFile эксель файл расписания для первого корпуса
+     * @return лист объектов класса Lesson
+     */
+    fun convertFirstCorpus() : List<Lesson>
+
+    /**
+     * Этот метод используется для обработки файла расписания второго корпуса на ул.Советская.
+     *
+     * @param pdfFile эксель файл расписания для второго корпуса
+     * @return лист объектов класса Lesson
+     */
+    fun convertSecondCorpus() : List<Lesson>
+
+    /**
+     * Этот метод используется для обработки файла расписания третьего корпуса на ул.Ленинградская.
+     *
+     * @param pdf эксель файл расписания для второго корпуса
+     * @return лист объектов класса Lesson
+     */
+    fun convertThirdCorpus() : List<Lesson>
 }

@@ -29,7 +29,7 @@ import com.google.android.material.color.DynamicColors
  * @version  1.0
  */
 class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
-    private val BASE_URI = "https://ptgh.onego.ru/9006/"
+    private val BASE_URI = "https://patt.karelia.ru/students/schedule"
     private lateinit var preferences: SharedPreferences
     private lateinit var database: AppDatabase
     private lateinit var scheduleRepository: ScheduleRepository
@@ -52,7 +52,7 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
-        database = AppDatabase.getInstance()
+        database = AppDatabase.getInstance(this)
         scheduleRepository = ScheduleRepository(this, database, NetworkService(this, BASE_URI,preferences))
     }
 
@@ -61,6 +61,10 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun setLocale(locale : String?) {
+
+    }
+
+    private fun setTheme(theme : String?){
 
     }
 

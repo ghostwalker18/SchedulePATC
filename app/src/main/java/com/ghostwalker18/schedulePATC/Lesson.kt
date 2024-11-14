@@ -14,6 +14,11 @@
 
 package com.ghostwalker18.schedulePATC
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.TypeConverters
+import java.util.Calendar
+
 /**
  * Этот класс используется для описания единичной сущности расписания - урока.
  * Используется в ORM.
@@ -23,5 +28,17 @@ package com.ghostwalker18.schedulePATC
  * @author  Ипатов Никита
  * @since 1.0
  */
-class Lesson {
-}
+@Entity(
+    tableName = "tblSchedule",
+    primaryKeys = ["lessonDate", "lessonNumber", "groupName", "subjectName"]
+)
+data class Lesson(
+    @TypeConverters(DateConverters::class)
+    @ColumnInfo(name = "lessonDate") val date : Calendar,
+    @ColumnInfo(name = "lessonNumber") val lessonNumber : String,
+    @ColumnInfo(name="roomNumber") val roomNumber : String?,
+    @ColumnInfo(name = "lessonTimes") val times : String?,
+    @ColumnInfo(name = "groupName") val groupName : String,
+    @ColumnInfo(name = "subjectName") val subject : String,
+    @ColumnInfo(name = "teacherName") val teacher: String?
+)

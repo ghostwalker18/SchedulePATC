@@ -14,16 +14,50 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room.databaseBuilder
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+
 /**
  * Этот класс используется Room для генерации класса для ORM операций с БД приложения.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-abstract class AppDatabase {
+@Database(entities = [Lesson::class, Note:: class], version = 1)
+abstract class AppDatabase : RoomDatabase(){
+    abstract fun lessonDao() : LessonDao
+    abstract fun noteDao() : NoteDao
     companion object{
-        fun getInstance() : AppDatabase{
-            return AppDatabase()
+        fun getInstance(context : Context) : AppDatabase{
+            val callback = object : RoomDatabase.Callback(){
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    db.execSQL(UPDATE_DAY_TRIGGER_1);
+                    db.execSQL(UPDATE_DAY_TRIGGER_2);
+                }
+            }
+            return databaseBuilder(context, AppDatabase::class.java, "database")
+                .addCallback(callback)
+                .build();
         }
+
+        const val UPDATE_DAY_TRIGGER_1 =
+                "CREATE TRIGGER IF NOT EXISTS update_day_stage1 " +
+                "BEFORE INSERT ON tblSchedule " +
+                "BEGIN " +
+                "DELETE FROM tblSchedule WHERE groupName = NEW.groupName AND " +
+                "                lessonDate = NEW.lessonDate AND " +
+                "                lessonNumber = NEW.lessonNumber;" +
+                "END;"
+        const val UPDATE_DAY_TRIGGER_2 =
+                "CREATE TRIGGER IF NOT EXISTS update_day_stage2 " +
+                "AFTER INSERT ON tblSchedule " +
+                "BEGIN " +
+                "DELETE FROM tblSchedule WHERE subjectName = '';"+
+                "END;"
     }
+
 }
