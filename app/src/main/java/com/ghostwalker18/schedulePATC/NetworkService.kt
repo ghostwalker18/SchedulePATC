@@ -44,7 +44,7 @@ class NetworkService(context: Context, baseUri : String, preferences: SharedPref
      * Этот метод позволяет получить API сайта ПТГХ.
      * @return API сайта для доступа к скачиванию файлов расписания
      */
-    fun getScheduleAPI(): ScheduleNetworkAPI? {
+    fun getScheduleAPI(): ScheduleNetworkAPI {
         val apiBuilder = Retrofit.Builder()
             .baseUrl(baseUri)
             .callbackExecutor(Executors.newFixedThreadPool(3))

@@ -14,6 +14,9 @@
 
 package com.ghostwalker18.schedulePATC
 
+import org.apache.poi.ss.usermodel.Workbook
+import java.io.File
+
 /**
  * Этот интерфейс описывет методы для преобразования pdf-файлов расписания ПАТТ в коллекции
  * элементов Lesson.
@@ -28,7 +31,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для первого корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertFirstCorpus() : List<Lesson>
+    fun convertFirstCorpus(file: File) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания второго корпуса на ул.Советская.
@@ -36,7 +39,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertSecondCorpus() : List<Lesson>
+    fun convertSecondCorpus(file: File) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания третьего корпуса на ул.Ленинградская.
@@ -44,5 +47,5 @@ interface IConverter {
      * @param pdf эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertThirdCorpus() : List<Lesson>
+    fun convertThirdCorpus(file: File) : List<Lesson>
 }

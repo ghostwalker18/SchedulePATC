@@ -32,7 +32,6 @@ import java.util.Locale
  * @version  1.0
  */
 class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
-    private val BASE_URI = "https://patt.karelia.ru/students/schedule"
     private lateinit var preferences: SharedPreferences
     private lateinit var database: AppDatabase
     private lateinit var scheduleRepository: ScheduleRepository
@@ -56,7 +55,7 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         database = AppDatabase.getInstance(this)
-        scheduleRepository = ScheduleRepository(this, database, NetworkService(this, BASE_URI,preferences))
+        scheduleRepository = ScheduleRepository(this, database, NetworkService(this, baseUri,preferences))
         scheduleRepository.update()
     }
 
@@ -81,6 +80,7 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
     }
 
     companion object {
+        const val baseUri = "https://patt.karelia.ru/students/schedule"
         lateinit var instance : ScheduleApp
         fun getInstance() : ScheduleApp{
             return instance

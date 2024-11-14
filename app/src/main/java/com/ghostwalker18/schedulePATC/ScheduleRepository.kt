@@ -19,6 +19,14 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import com.github.pjfanning.xlsx.StreamingReader
+import okhttp3.ResponseBody
+import org.apache.poi.openxml4j.util.ZipSecureFile
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
@@ -32,7 +40,8 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     private val context: Context
     private val db : AppDatabase
     private val preferences: SharedPreferences
-    private val networkService : NetworkService
+    private val api : ScheduleNetworkAPI
+    private val parser: IConverter = PDFToLessonsConverter()
     private val mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody"
     private val status = MutableLiveData<Status>()
     private val updateExecutorService = Executors.newFixedThreadPool(4)
@@ -41,7 +50,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     init{
         this.context = context
         this.db = db
-        this.networkService = networkService
+        api = networkService.getScheduleAPI()
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
     }
 
@@ -66,7 +75,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
             if (downloadFor == "all" || downloadFor == "second") updateFutures.add(
                 updateExecutorService.submit { updateSecondCorpus() })
             if(downloadFor == "all" || downloadFor == "third")
-            updateFutures.add(updateExecutorService.submit { updateThirdCorpus() })
+                updateFutures.add(updateExecutorService.submit { updateThirdCorpus() })
         }
     }
 
@@ -128,26 +137,120 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     }
 
     /**
+     * Этот метод получает ссылки с сайта ПАТТ,
+     * по которым доступно расписание для корпуса на Первомайском пр.
+     *
+     * @return список ссылок
+     */
+    fun getLinksForFirstCorpusSchedule(): List<String> {
+        val links: MutableList<String> = java.util.ArrayList()
+        return links
+    }
+
+    /**
+     * Этот метод получает ссылки с сайта ПАТТ,
+     * по которым доступно расписание для корпуса на ул.Советской.
+     *
+     * @return список ссылок
+     */
+    fun getLinksForSecondCorpusSchedule(): List<String> {
+        val links: MutableList<String> = java.util.ArrayList()
+        return links
+    }
+
+    /**
+     * Этот метод получает ссылки с сайта ПАТТ,
+     * по которым доступно расписание для корпуса на ул.Ленинградской.
+     *
+     * @return список ссылок
+     */
+    fun getLinksForThirdCorpusSchedule(): List<String> {
+        val links: MutableList<String> = java.util.ArrayList()
+        return links
+    }
+
+    /**
      * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
      *
      * @param link ссылка на файл
      * @return имя файла
      */
-    fun getNameFromLink(link: String): String? {
+    fun getNameFromLink(link: String): String {
         val parts = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
         return parts[parts.size - 1]
     }
 
     private fun updateFirstCorpus(){
-
+        updateSchedule(this::getLinksForFirstCorpusSchedule){
+            parser.convertFirstCorpus(it)
+        }
     }
 
     private fun updateSecondCorpus(){
-
+        updateSchedule(this::getLinksForSecondCorpusSchedule){
+            parser.convertSecondCorpus(it)
+        }
     }
 
     private fun updateThirdCorpus(){
+        updateSchedule(this::getLinksForThirdCorpusSchedule){
+            parser.convertThirdCorpus(it)
+        }
+    }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями
+     * @param linksGetter метод для получения ссылок на файлы расписания
+     * @param parser парсер файлов расписания
+     */
+    private fun updateSchedule(linksGetter: Callable<List<String?>>, parser: (file: File) -> List<Lesson>) {
+        var scheduleLinks: List<String?> = java.util.ArrayList()
+        try {
+            scheduleLinks = linksGetter.call()
+        } catch (ignored: Exception) { /*Not required*/
+        }
+        if (scheduleLinks.isEmpty())
+            status.postValue(Status(
+                context.getString(R.string.schedule_download_error),
+                0))
+        for (link in scheduleLinks) {
+            status.postValue(Status(
+                    context.getString(R.string.schedule_download_status),
+                10))
+            api.getScheduleFile(link).enqueue(object : Callback<ResponseBody?> {
+                override fun onResponse(
+                    call: Call<ResponseBody?>,
+                    response: Response<ResponseBody?>
+                ) {
+                    if (response.body() != null) {
+                        status.postValue(
+                            Status(context.getString(R.string.schedule_parsing_status), 33))
+                        ZipSecureFile.setMinInflateRatio(0.0075)
+                        try {
+                            StreamingReader.builder()
+                                .rowCacheSize(10)
+                                .bufferSize(4096)
+                                .open(response.body()!!.byteStream()).use { pdfFile ->
+                                    val lessons: List<Lesson> =
+                                        parser.invoke(pdfFile)
+                                    db.lessonDao().insertMany(lessons)
+                                    status.postValue(
+                                        Status(context.getString(R.string.processing_completed_status), 100))
+                                }
+                        } catch (e: Exception) {
+                            status.postValue(
+                                Status(context.getString(R.string.schedule_parsing_error), 0))
+                        }
+                        response.body()!!.close()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                    status.postValue(
+                        Status(context.getString(R.string.schedule_download_error), 0))
+                }
+            })
+        }
     }
 }

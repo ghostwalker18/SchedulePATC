@@ -14,6 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
+import okhttp3.ResponseBody
+import org.jsoup.nodes.Document
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Url
+
 /**
  * Интерфейс для создания Retrofit2 API,
  * используемого при скачивании файлов расписания.
@@ -22,4 +28,19 @@ package com.ghostwalker18.schedulePATC
  * @since 1.0
  */
 interface ScheduleNetworkAPI {
+    /**
+     * Получение файла расписания по заданному URL.
+     *
+     * @return асинхронный ответ сервера
+     */
+    @GET
+    fun getScheduleFile(@Url url: String?): Call<ResponseBody?>
+
+    /**
+     * Получение страницы с расписанием ПАТТ.
+     *
+     * @return асинхронный ответ сервера
+     */
+    @GET(ScheduleApp.baseUri)
+    fun getMainPage(): Call<Document?>
 }
