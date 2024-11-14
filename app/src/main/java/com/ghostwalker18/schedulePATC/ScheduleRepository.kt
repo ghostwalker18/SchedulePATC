@@ -14,13 +14,22 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс представляет собой репозиторий данных прилвожения о расписании.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class ScheduleRepository(context : Context, db : AppDatabase, networkService : NetworkService){
+    private var context: Context
+    private var db : AppDatabase
+    private var networkService : NetworkService
+
+    init{
+        this.context = context
+        this.db = db
+        this.networkService = networkService
+    }
 }

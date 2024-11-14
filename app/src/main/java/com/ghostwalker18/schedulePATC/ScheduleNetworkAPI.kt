@@ -14,13 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Интерфейс для создания Retrofit2 API,
+ * используемого при скачивании файлов расписания.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+interface ScheduleNetworkAPI {
 }

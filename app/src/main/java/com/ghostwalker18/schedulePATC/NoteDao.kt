@@ -14,13 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Интерфейс DAO для работы с таблицой БД, содержащей сведения о заметках к занятиям.
+ * Используется Room для генерации.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+interface NoteDao {
 }

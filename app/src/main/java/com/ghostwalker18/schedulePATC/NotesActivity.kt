@@ -16,5 +16,11 @@ package com.ghostwalker18.schedulePATC
 
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Этот классс представляет собой экран приложения, на котором отображаются заметки к занятиям.
+ *
+ * @author Ипатов Никита
+ * @since 1.0
+ */
 class NotesActivity : AppCompatActivity() {
 }

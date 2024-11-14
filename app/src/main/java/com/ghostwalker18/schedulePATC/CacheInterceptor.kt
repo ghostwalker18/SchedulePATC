@@ -14,13 +14,17 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import okhttp3.Interceptor
+import okhttp3.Response
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс служит для реализации кэширования запросов к серверу расписания.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class CacheInterceptor : Interceptor{
+    override fun intercept(chain: Interceptor.Chain): Response {
+        TODO("Not yet implemented")
+    }
 }

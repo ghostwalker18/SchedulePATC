@@ -16,5 +16,11 @@ package com.ghostwalker18.schedulePATC
 
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Этот класс представляет собой экран, где пользователь может поделиться ссылкой на приложение.
+ *
+ * @author Ипатов Никита
+ * @since 1.0
+ */
 class ShareAppActivity : AppCompatActivity() {
 }

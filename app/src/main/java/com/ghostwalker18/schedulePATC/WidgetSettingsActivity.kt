@@ -16,5 +16,11 @@ package com.ghostwalker18.schedulePATC
 
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Этот класс представляет собой экран настроек виджета приложения
+ *
+ * @author  Ипатов Никита
+ * @since 1.0
+ */
 class WidgetSettingsActivity : AppCompatActivity() {
 }

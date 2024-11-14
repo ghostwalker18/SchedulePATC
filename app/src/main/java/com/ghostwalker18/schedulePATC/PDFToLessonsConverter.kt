@@ -14,13 +14,10 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс содержит в себе методы для работы с файлами расписания ПАТТ.
  *
  * @author  Ипатов Никита
- * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class PDFToLessonsConverter : IConverter {
 }

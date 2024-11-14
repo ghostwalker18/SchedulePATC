@@ -14,13 +14,13 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс служит для отслеживания изменений состояния списка заметок, отображаемого пользователю.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class NotesModel : ViewModel(){
 }

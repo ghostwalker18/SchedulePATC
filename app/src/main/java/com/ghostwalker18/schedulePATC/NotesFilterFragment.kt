@@ -14,13 +14,13 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс служит для отображения панели фильтров заметок.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class NotesFilterFragment : Fragment() {
 }

@@ -14,13 +14,13 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import retrofit2.Converter
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс используется для преобразования тела ответа Retrofit в Document библиотеки Jsoup.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class JsoupConverterFactory : Converter.Factory(){
 }

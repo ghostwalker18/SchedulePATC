@@ -14,13 +14,13 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс используется для описания единичной сущности заметок.
+ * Используется в ORM.
+ * Содержит поля для даты, группы, темы, текста, идентификатора фото.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class Note {
 }

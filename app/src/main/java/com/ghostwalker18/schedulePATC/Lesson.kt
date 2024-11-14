@@ -14,13 +14,14 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс используется для описания единичной сущности расписания - урока.
+ * Используется в ORM.
+ * Содержит поля для даты, порядкового номера, номера(названия) кабинета,
+ * времени проведения, группы, преподавателя, предмета.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class Lesson {
 }

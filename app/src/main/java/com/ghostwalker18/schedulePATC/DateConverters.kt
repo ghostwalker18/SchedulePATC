@@ -14,13 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
-
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс используется для ORM.
+ * Содержит методы для преобразования Calendar в String для БД и наоборот
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class DateConverters {
 }

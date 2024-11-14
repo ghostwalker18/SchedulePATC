@@ -14,13 +14,15 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.SharedPreferences
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс используется для предоставления приложению услуг доступа к сети.
  *
- * @author  Ипатов Никита
+ * @author Ipatov Nikita
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class NetworkService(context: Context, baseUri : String, preferences: SharedPreferences) {
+    private val SIZE_OF_CACHE = 10 * 1024 * 1024
 }

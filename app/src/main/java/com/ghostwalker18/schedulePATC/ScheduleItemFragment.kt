@@ -14,13 +14,14 @@
 
 package com.ghostwalker18.schedulePATC
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
 /**
- * Этот класс представляет собой основной экран приложения.
+ * Этот класс предсавляет собой кастомный элемент GUI,
+ * используемый для отображения расписания на день.
  *
- * @author  Ипатов Никита
+ * @author Ипатов Никита
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class ScheduleItemFragment : Fragment() {
 }

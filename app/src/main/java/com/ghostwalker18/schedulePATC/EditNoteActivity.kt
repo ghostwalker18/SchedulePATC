@@ -16,6 +16,12 @@ package com.ghostwalker18.schedulePATC
 
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Этот класс представляет собой экран редактирования или добавления новой заметки
+ *
+ * @author Ипатов Никита
+ * @since 1.0
+ */
 class EditNoteActivity : AppCompatActivity() {
 
 }
