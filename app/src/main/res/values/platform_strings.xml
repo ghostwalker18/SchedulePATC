@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <string name="for_group">Для группы:</string>
+    <string name="last_chosen">Последняя выбранная</string>
+    <string name="not_mentioned">Не указано</string>
+    <string name="updated">Обновлено:</string>
+    <string name="schedule_missing">Список занятий отсутствует</string>
+    <string name="day">День</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="appearance">Внешний вид</string>
+    <string name="dynamic_colors">Использовать динамические цвета</string>
+    <string name="rounded_corners">Скругленные углы</string>
+    <string name="add_widget">Добавить виджет</string>
+    <string name="app_widget_description">Расписание ПТГХ на день для группы</string>
+    <string name="permission_for_photo">Требуется разрешение, чтобы сделать фото</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="scan_qr_code">Отсканируйте QR код</string>
+    <string name="or">Или</string>
+    <string name="share_link">Поделитесь ссылкой</string>
+    <string name="rustore_link" translatable="false">
+        https://www.rustore.ru/catalog/app/com.ghostwalker18.schedule
+    </string>
+</resources>
