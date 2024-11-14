@@ -14,7 +14,10 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import com.ghostwalker18.schedulePATC.databinding.ActivitySettingsBinding
 
 /**
  * Этот класс представляет собой экран настроек приложения
@@ -23,4 +26,11 @@ import androidx.appcompat.app.AppCompatActivity
  * @since 1.0
  */
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var binding : ActivitySettingsBinding
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
 }

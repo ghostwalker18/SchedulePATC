@@ -14,7 +14,10 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import com.ghostwalker18.schedulePATC.databinding.ActivityEditNoteBinding
 
 /**
  * Этот класс представляет собой экран редактирования или добавления новой заметки
@@ -23,5 +26,11 @@ import androidx.appcompat.app.AppCompatActivity
  * @since 1.0
  */
 class EditNoteActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityEditNoteBinding
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        binding = ActivityEditNoteBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
 }

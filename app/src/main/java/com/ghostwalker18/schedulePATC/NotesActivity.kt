@@ -14,7 +14,10 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import com.ghostwalker18.schedulePATC.databinding.ActivityNotesBinding
 
 /**
  * Этот классс представляет собой экран приложения, на котором отображаются заметки к занятиям.
@@ -23,4 +26,11 @@ import androidx.appcompat.app.AppCompatActivity
  * @since 1.0
  */
 class NotesActivity : AppCompatActivity() {
+    private lateinit var binding : ActivityNotesBinding
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        binding = ActivityNotesBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
 }

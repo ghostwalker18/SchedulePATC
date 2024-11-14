@@ -14,7 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.ghostwalker18.schedulePATC.databinding.FragmentFilterBinding
 
 /**
  * Этот класс служит для отображения панели фильтров заметок.
@@ -23,4 +28,19 @@ import androidx.fragment.app.Fragment
  * @since 1.0
  */
 class NotesFilterFragment : Fragment() {
+    private var _binding: FragmentFilterBinding? = null
+    private val binding get() = _binding!!
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFilterBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

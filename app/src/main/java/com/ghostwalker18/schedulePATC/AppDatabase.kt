@@ -20,7 +20,7 @@ package com.ghostwalker18.schedulePATC
  * @author  Ипатов Никита
  * @since 1.0
  */
-class AppDatabase {
+abstract class AppDatabase {
     companion object{
         fun getInstance() : AppDatabase{
             return AppDatabase()
