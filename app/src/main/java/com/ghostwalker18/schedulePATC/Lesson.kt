@@ -28,10 +28,8 @@ import java.util.Calendar
  * @author  Ипатов Никита
  * @since 1.0
  */
-@Entity(
-    tableName = "tblSchedule",
-    primaryKeys = ["lessonDate", "lessonNumber", "groupName", "subjectName"]
-)
+@Entity(tableName = "tblSchedule",
+    primaryKeys = ["lessonDate", "lessonNumber", "groupName", "subjectName"])
 data class Lesson(
     @TypeConverters(DateConverters::class)
     @ColumnInfo(name = "lessonDate") val date : Calendar,
@@ -41,4 +39,15 @@ data class Lesson(
     @ColumnInfo(name = "groupName") val groupName : String,
     @ColumnInfo(name = "subjectName") val subject : String,
     @ColumnInfo(name = "teacherName") val teacher: String?
-)
+){
+    override fun toString(): String {
+        val resources = ScheduleApp.getInstance().resources
+        var res = ""
+        res = res + resources.getString(R.string.number) + ": " + lessonNumber + "\n"
+        res = res + resources.getString(R.string.subject) + ": " + subject + "\n"
+        if (teacher != "") res = res + resources.getString(R.string.teacher) + ": " + teacher + "\n"
+        if (roomNumber != "") res =
+            res + resources.getString(R.string.room) + ": " + roomNumber + "\n"
+        return res
+    }
+}

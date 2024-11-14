@@ -20,4 +20,15 @@ package com.ghostwalker18.schedulePATC
  * @author  Ипатов Никита
  */
 class PDFToLessonsConverter : IConverter {
+    override fun convertFirstCorpus(): List<Lesson> {
+        TODO("Not yet implemented")
+    }
+
+    override fun convertSecondCorpus(): List<Lesson> {
+        TODO("Not yet implemented")
+    }
+
+    override fun convertThirdCorpus(): List<Lesson> {
+        TODO("Not yet implemented")
+    }
 }

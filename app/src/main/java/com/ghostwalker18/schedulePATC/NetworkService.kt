@@ -16,6 +16,11 @@ package com.ghostwalker18.schedulePATC
 
 import android.content.Context
 import android.content.SharedPreferences
+import okhttp3.Cache
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * Этот класс используется для предоставления приложению услуг доступа к сети.
@@ -24,5 +29,37 @@ import android.content.SharedPreferences
  * @since 1.0
  */
 class NetworkService(context: Context, baseUri : String, preferences: SharedPreferences) {
-    private val SIZE_OF_CACHE = 10 * 1024 * 1024
+    private val sizeOfCache: Long = 10 * 1024 * 1024
+    private val baseUri: String
+    private val context: Context?
+    private val preferences: SharedPreferences
+
+    init {
+        this.context = context
+        this.baseUri = baseUri
+        this.preferences = preferences
+    }
+
+    /**
+     * Этот метод позволяет получить API сайта ПТГХ.
+     * @return API сайта для доступа к скачиванию файлов расписания
+     */
+    fun getScheduleAPI(): ScheduleNetworkAPI? {
+        val apiBuilder = Retrofit.Builder()
+            .baseUrl(baseUri)
+            .callbackExecutor(Executors.newFixedThreadPool(3))
+            .addConverterFactory(JsoupConverterFactory())
+        val isCachingEnabled = preferences.getBoolean("isCachingEnabled", true)
+        if (isCachingEnabled) {
+            val cache = Cache(File(context!!.cacheDir, "http"), sizeOfCache)
+            val client = OkHttpClient().newBuilder()
+                .cache(cache)
+                .addInterceptor(CacheInterceptor())
+                .build()
+            apiBuilder.client(client)
+        }
+        return apiBuilder
+            .build()
+            .create(ScheduleNetworkAPI::class.java)
+    }
 }

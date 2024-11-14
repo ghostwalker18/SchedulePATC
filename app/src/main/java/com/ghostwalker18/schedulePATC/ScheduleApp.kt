@@ -17,7 +17,10 @@ package com.ghostwalker18.schedulePATC
 import android.app.Application
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.google.android.material.color.DynamicColors
+import java.util.Locale
 
 /**
  * <h1>SchedulePATC</h1>
@@ -54,18 +57,27 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
         instance = this
         database = AppDatabase.getInstance(this)
         scheduleRepository = ScheduleRepository(this, database, NetworkService(this, BASE_URI,preferences))
+        scheduleRepository.update()
     }
 
     fun getNotesRepository() : NotesRepository {
         return notesRepository
     }
 
-    private fun setLocale(locale : String?) {
-
+    private fun setLocale(localeCode : String?) {
+        val localeListCompat = if (localeCode == "system")
+            LocaleListCompat.getEmptyLocaleList()
+        else
+            LocaleListCompat.create(localeCode?.let { Locale(it) })
+        AppCompatDelegate.setApplicationLocales(localeListCompat)
     }
 
     private fun setTheme(theme : String?){
-
+        when(theme){
+            "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            "night" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "day" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
     }
 
     companion object {

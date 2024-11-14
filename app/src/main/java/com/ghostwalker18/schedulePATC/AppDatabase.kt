@@ -59,5 +59,4 @@ abstract class AppDatabase : RoomDatabase(){
                 "DELETE FROM tblSchedule WHERE subjectName = '';"+
                 "END;"
     }
-
 }

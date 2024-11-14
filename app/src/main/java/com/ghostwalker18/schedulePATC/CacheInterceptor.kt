@@ -25,6 +25,11 @@ import okhttp3.Response
  */
 class CacheInterceptor : Interceptor{
     override fun intercept(chain: Interceptor.Chain): Response {
-        TODO("Not yet implemented")
+        val response = chain.proceed(chain.request())
+        return if (!response.isSuccessful || response.cacheControl().noCache()
+            || response.cacheControl().mustRevalidate() || response.cacheControl().noStore()
+        ) response else response.newBuilder()
+            .header("Cache-Control", "max-age=3600")
+            .build()
     }
 }

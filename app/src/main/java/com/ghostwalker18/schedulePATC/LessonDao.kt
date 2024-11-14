@@ -84,7 +84,7 @@ interface LessonDao {
     @Query("SELECT * FROM tblSchedule " +
                 "WHERE lessonDate = :date AND teacherName LIKE '%' || :teacher || '%' " +
                 "ORDER BY lessonTimes")
-    fun getLessonsForTeacher(date: Calendar?, teacher: String?): LiveData<Array<Lesson?>?>?
+    fun getLessonsForTeacher(date: Calendar?, teacher: String?): LiveData<Array<Lesson>>
 
     /**
      * Этот метод позволяет получить список всех предметов у группы.
@@ -93,7 +93,7 @@ interface LessonDao {
      */
     @Query("SELECT DISTINCT subjectName FROM tblSchedule WHERE groupName = :group " +
                 "ORDER BY subjectName ASC")
-    fun getSubjectsForGroup(group: String?): LiveData<Array<String?>?>?
+    fun getSubjectsForGroup(group: String?): LiveData<Array<String>>
 
     /**
      * Этот метод позволяет вставить элемент Lesson в БД.

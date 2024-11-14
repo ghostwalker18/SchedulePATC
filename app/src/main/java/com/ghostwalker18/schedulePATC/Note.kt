@@ -14,6 +14,12 @@
 
 package com.ghostwalker18.schedulePATC
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import java.util.Calendar
+
 /**
  * Этот класс используется для описания единичной сущности заметок.
  * Используется в ORM.
@@ -22,5 +28,23 @@ package com.ghostwalker18.schedulePATC
  * @author  Ипатов Никита
  * @since 1.0
  */
-class Note {
+@Entity(tableName = "tblNote")
+data class Note(
+    @PrimaryKey(autoGenerate = true) val id : Int,
+    @TypeConverters(DateConverters::class)
+    @ColumnInfo(name = "noteDate") val date : Calendar,
+    @ColumnInfo(name = "noteGroup") val group : String,
+    @ColumnInfo(name = "noteTheme") val theme: String?,
+    @ColumnInfo(name = "noteText") val text: String,
+    @ColumnInfo(name = "notePhotoID") val photoID: String?
+){
+    override fun toString(): String {
+        val resources = ScheduleApp.getInstance().resources
+        var res = ""
+        res = res + resources.getString(R.string.date) + ": " + DateConverters.toString(date) + "\n"
+        res = res + resources.getString(R.string.group) + ": " + group + "\n"
+        res = res + resources.getString(R.string.theme) + ": " + theme + "\n"
+        res = res + resources.getString(R.string.text) + ": " + text + "\n"
+        return res
+    }
 }
