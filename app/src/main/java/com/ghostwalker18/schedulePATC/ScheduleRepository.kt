@@ -19,14 +19,13 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
-import com.github.pjfanning.xlsx.StreamingReader
 import okhttp3.ResponseBody
 import org.apache.poi.openxml4j.util.ZipSecureFile
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
+import java.util.Calendar
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -127,6 +126,21 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      * @param group группа
      * @return список занятий
      */
+
+    fun getLessons(group: String?, teacher: String?, date: Calendar): LiveData<Array<Lesson>>{
+        TODO("not yet implemented")
+    }
+
+    /**
+     * Этот метод предназначен для сохранения последней выбранной группы перед закрытием приложения.
+     *
+     * @param group группа для сохранения
+     */
+    fun saveGroup(group: String?) {
+        preferences.edit()
+            .putString("savedGroup", group)
+            .apply()
+    }
 
     /**
      * Этот метод возвращает сохраненную группу.
@@ -247,6 +261,21 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
                         Status(context.getString(R.string.schedule_download_error), 0))
                 }
             })
+        }
+    }
+
+    companion object {
+
+        /**
+         * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
+         *
+         * @param link ссылка на файл
+         * @return имя файла
+         */
+        fun getNameFromLink(link: String): String? {
+            val parts = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()
+            return parts[parts.size - 1]
         }
     }
 }

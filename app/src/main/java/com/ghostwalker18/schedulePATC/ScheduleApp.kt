@@ -31,7 +31,7 @@ import java.util.Locale
  * @author  Ипатов Никита
  * @version  1.0
  */
-class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
+class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
     private lateinit var preferences: SharedPreferences
     private lateinit var database: AppDatabase
     private lateinit var scheduleRepository: ScheduleRepository
@@ -59,10 +59,24 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
         scheduleRepository.update()
     }
 
-    fun getNotesRepository() : NotesRepository {
+    /**
+     * Этот метод позволяет получить репозиторий заметок приложения.
+     */
+    fun getNotesRepository(): NotesRepository {
         return notesRepository
     }
 
+    /**
+     * Этот метод позволяет получить репозиторий расписания приложения.
+     */
+    fun getScheduleRepository(): ScheduleRepository {
+        return scheduleRepository
+    }
+
+    /**
+     * Этот метод позволяет установить язык приложения
+     * @param localeCode код языка
+     */
     private fun setLocale(localeCode : String?) {
         val localeListCompat = if (localeCode == "system")
             LocaleListCompat.getEmptyLocaleList()
@@ -70,7 +84,10 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
             LocaleListCompat.create(localeCode?.let { Locale(it) })
         AppCompatDelegate.setApplicationLocales(localeListCompat)
     }
-
+    /**
+     * Этот метод позволяет установить тему приложения
+     * @param theme код темы (system, day, night)
+     */
     private fun setTheme(theme : String?){
         when(theme){
             "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -81,8 +98,13 @@ class ScheduleApp : Application(), OnSharedPreferenceChangeListener {
 
     companion object {
         const val baseUri = "https://patt.karelia.ru/students/schedule"
-        lateinit var instance : ScheduleApp
-        fun getInstance() : ScheduleApp{
+        lateinit var instance: ScheduleApp
+
+        /**
+         * Этот метод позволяет получить доступ к экзэмпляру приложения
+         * @return приложение
+         */
+        fun getInstance(): ScheduleApp {
             return instance
         }
     }
