@@ -14,21 +14,23 @@
 
 package com.ghostwalker18.schedulePATC
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument
+
 /**
  * Этот класс содержит в себе методы для работы с файлами расписания ПАТТ.
  *
  * @author  Ипатов Никита
  */
 class PDFToLessonsConverter : IConverter {
-    override fun convertFirstCorpus(): List<Lesson> {
+    override fun convertFirstCorpus(pdfFile: XWPFDocument): List<Lesson> {
         TODO("Not yet implemented")
     }
 
-    override fun convertSecondCorpus(): List<Lesson> {
+    override fun convertSecondCorpus(pdfFile: XWPFDocument): List<Lesson> {
         TODO("Not yet implemented")
     }
 
-    override fun convertThirdCorpus(): List<Lesson> {
+    override fun convertThirdCorpus(pdfFile: XWPFDocument): List<Lesson> {
         TODO("Not yet implemented")
     }
 }

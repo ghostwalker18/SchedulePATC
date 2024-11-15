@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager
 import com.github.pjfanning.xlsx.StreamingReader
 import okhttp3.ResponseBody
 import org.apache.poi.openxml4j.util.ZipSecureFile
+import org.apache.poi.xwpf.usermodel.XWPFDocument
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -204,12 +205,12 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      * @param linksGetter метод для получения ссылок на файлы расписания
      * @param parser парсер файлов расписания
      */
-    private fun updateSchedule(linksGetter: Callable<List<String?>>, parser: (file: File) -> List<Lesson>) {
+    private fun updateSchedule(linksGetter: Callable<List<String?>>,
+                               parser: (file: XWPFDocument) -> List<Lesson>) {
         var scheduleLinks: List<String?> = java.util.ArrayList()
         try {
             scheduleLinks = linksGetter.call()
-        } catch (ignored: Exception) { /*Not required*/
-        }
+        } catch (ignored: Exception) { /*Not required*/ }
         if (scheduleLinks.isEmpty())
             status.postValue(Status(
                 context.getString(R.string.schedule_download_error),
@@ -221,23 +222,18 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
             api.getScheduleFile(link).enqueue(object : Callback<ResponseBody?> {
                 override fun onResponse(
                     call: Call<ResponseBody?>,
-                    response: Response<ResponseBody?>
-                ) {
+                    response: Response<ResponseBody?>) {
                     if (response.body() != null) {
                         status.postValue(
                             Status(context.getString(R.string.schedule_parsing_status), 33))
                         ZipSecureFile.setMinInflateRatio(0.0075)
                         try {
-                            StreamingReader.builder()
-                                .rowCacheSize(10)
-                                .bufferSize(4096)
-                                .open(response.body()!!.byteStream()).use { pdfFile ->
-                                    val lessons: List<Lesson> =
-                                        parser.invoke(pdfFile)
-                                    db.lessonDao().insertMany(lessons)
-                                    status.postValue(
-                                        Status(context.getString(R.string.processing_completed_status), 100))
-                                }
+                            XWPFDocument(response.body()!!.byteStream()).use { pdfFile ->
+                                val lessons: List<Lesson> = parser.invoke(pdfFile)
+                                db.lessonDao().insertMany(lessons)
+                                status.postValue(
+                                    Status(context.getString(R.string.processing_completed_status), 100))
+                            }
                         } catch (e: Exception) {
                             status.postValue(
                                 Status(context.getString(R.string.schedule_parsing_error), 0))

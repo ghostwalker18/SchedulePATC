@@ -15,6 +15,7 @@
 package com.ghostwalker18.schedulePATC
 
 import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.xwpf.usermodel.XWPFDocument
 import java.io.File
 
 /**
@@ -31,7 +32,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для первого корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertFirstCorpus(file: File) : List<Lesson>
+    fun convertFirstCorpus(pdfFile: XWPFDocument) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания второго корпуса на ул.Советская.
@@ -39,7 +40,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertSecondCorpus(file: File) : List<Lesson>
+    fun convertSecondCorpus(pdfFile: XWPFDocument) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания третьего корпуса на ул.Ленинградская.
@@ -47,5 +48,5 @@ interface IConverter {
      * @param pdf эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertThirdCorpus(file: File) : List<Lesson>
+    fun convertThirdCorpus(pdfFile: XWPFDocument) : List<Lesson>
 }

@@ -58,11 +58,13 @@
         <item>Всех корпусов</item>
         <item>Первого корпуса</item>
         <item>Второго корпуса</item>
+        <item>Третьего корпуса</item>
     </string-array>
 
     <string-array name="download_values">
         <item>all</item>
         <item>first</item>
         <item>second</item>
+        <item>third</item>
     </string-array>
 </resources>
