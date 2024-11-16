@@ -14,7 +14,11 @@
 
 package com.ghostwalker18.schedulePATC
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.util.Calendar
 
 /**
  * Этот класс служит для отслеживания изменений состояния списка заметок, отображаемого пользователю.
@@ -23,4 +27,105 @@ import androidx.lifecycle.ViewModel
  * @since 1.0
  */
 class NotesModel : ViewModel(){
+    private val repository = ScheduleApp.getInstance().getNotesRepository()
+    private val notes = MediatorLiveData<Array<Note>>()
+    private var notesMediator: LiveData<Array<Note>> = MutableLiveData()
+    private val startDate = MutableLiveData<Calendar?>()
+    private val endDate = MutableLiveData<Calendar?>()
+    private var group: String? = null
+    private var keyword: String? = null
+
+    /**
+     * Этот метод выдает заметки для заданнной группы и временного интервала.
+     * @return список заметок
+     */
+    fun getNotes(): LiveData<Array<Note>?> {
+        return notes
+    }
+
+    /**
+     * Этот метод позволяет получить стартовую дату временного интервала для выдачи заметок.
+     * @return стратовая дата
+     */
+    fun getStartDate(): LiveData<Calendar?> {
+        return startDate
+    }
+
+    /**
+     * Этот метод позволяет получить конечную дату временного интервала для выдачи заметок.
+     * @return конечная дата
+     */
+    fun getEndDate(): LiveData<Calendar?> {
+        return endDate
+    }
+
+    /**
+     * Этот метод задает группу для выдачи заметок.
+     * @param group группа
+     */
+    fun setGroup(group: String?) {
+        this.group = group
+        notes.removeSource(notesMediator)
+        if (group != null) {
+            if (keyword != null) notesMediator = repository.getNotes(group, keyword!!)
+            if (startDate.value != null && endDate.value != null)
+                notesMediator = repository
+                    .getNotes(group, generateDateSequence(startDate.value!!, endDate.value!!))
+        }
+        notes.addSource(notesMediator){ x -> notes.setValue(x) }
+    }
+
+    /**
+     * Этот метод позволяет получить группу для выдачи заметок
+     * @return группа
+     */
+    fun getGroup(): String? {
+        return group
+    }
+
+    /**
+     * Этот метод устанавливает начальную дату временного интервала выдачи заметок.
+     * @param date начальная дата
+     */
+    fun setStartDate(date: Calendar?) {
+        startDate.value = date
+        notes.removeSource(notesMediator)
+        if (startDate.value != null && endDate.value != null && group != null)
+            notesMediator = repository
+                .getNotes(group!!, generateDateSequence(startDate.value!!, endDate.value!!))
+        notes.addSource(notesMediator){ x -> notes.setValue(x) }
+    }
+
+    /**
+     * Этот метод устанавливает конечную дату временного интервала выдачи заметок.
+     * @param date конечная дата
+     */
+    fun setEndDate(date: Calendar?) {
+        endDate.value = date
+        notes.removeSource(notesMediator)
+        if (startDate.value != null && endDate.value != null && group != null)
+            notesMediator = repository
+                .getNotes(group!!, generateDateSequence(startDate.value!!, endDate.value!!))
+        notes.addSource(notesMediator){ x -> notes.setValue(x) }
+    }
+
+    /**
+     * Этот метод позволяет получить последовательность дат, основываясь на начальной и конечной.
+     * @param startDate начальная дата (включается в интервал)
+     * @param endDate конечная дата (включается в интервал)
+     * @return массив дат
+     */
+    private fun generateDateSequence(startDate: Calendar, endDate: Calendar): Array<Calendar> {
+        if (startDate == endDate || endDate.before(startDate)) return arrayOf(startDate)
+        val resultList: MutableList<Calendar> = ArrayList()
+        //remember of reference nature of Java
+        val counter = startDate.clone() as Calendar
+        while (counter.before(endDate)) {
+            //remember of reference nature of Java (also here)
+            val date = counter.clone() as Calendar
+            resultList.add(date)
+            counter.add(Calendar.DATE, 1)
+        }
+        return resultList.toTypedArray()
+    }
 }

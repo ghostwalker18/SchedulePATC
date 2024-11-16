@@ -14,10 +14,17 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TableLayout
+import android.widget.TableRow
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import com.ghostwalker18.schedulePATC.databinding.ActivityScheduleItemBinding
+import java.util.Calendar
 
 /**
  * Этот класс представляет собой экран приложения для отображения расписания на день.
@@ -26,11 +33,124 @@ import com.ghostwalker18.schedulePATC.databinding.ActivityScheduleItemBinding
  * @since 1.0
  */
 class ScheduleItemActivity : AppCompatActivity() {
+    private lateinit var lessons: LiveData<Array<Lesson>>
     private lateinit var binding: ActivityScheduleItemBinding
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    private lateinit var repository: ScheduleRepository
+    private var teacher: String? = null
+    private var group: String? = null
+    private var date: Calendar? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivityScheduleItemBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
+        var bundle = intent.extras
+        if (bundle == null) {
+            bundle = savedInstanceState!!
+        }
+        teacher = bundle.getString("teacher")
+        group = bundle.getString("group")
+        date = DateConverters
+            .fromString(bundle.getString("date"))
+        date?.set(Calendar.DAY_OF_WEEK, bundle.getInt("dayOfWeek"))
+        binding.toolbar.setTitle(generateTitle(date!!))
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        repository = ScheduleApp.getInstance().getScheduleRepository()
+        lessons = repository.getLessons(group, teacher, date!!)
+        lessons.observe(this){ lessons -> populateTable(binding.schedule, lessons) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_schedule_item_activity, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_share) shareSchedule()
+        else super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("teacher", teacher)
+        outState.putString("group", group)
+        outState.putString("date", DateConverters.toString(date))
+        super.onSaveInstanceState(outState)
+    }
+
+    /**
+     * Этот метод используется для создания заголовка экрана
+     * @param date дата
+     * @return заголовок в строковом формате
+     */
+    private fun generateTitle(date: Calendar): String{
+        val title = getString(R.string.day_table)
+        val month = date[Calendar.MONTH] + 1
+        //Formatting month number with leading zero
+        var monthString = month.toString()
+        if (month < 10) {
+            monthString = "0$monthString"
+        }
+        val day = date[Calendar.DAY_OF_MONTH]
+        var dayString = day.toString()
+        //Formatting day number with leading zero
+        if (day < 10) {
+            dayString = "0$dayString"
+        }
+        return "$title $dayString/$monthString"
+    }
+
+    /**
+     * Этот метод используется для наполнения таблицы расписания данными.
+     * @param table таблица для заполнения
+     * @param lessons данные для заполнения
+     */
+    private fun populateTable(table: TableLayout, lessons: Array<Lesson>) {
+        var tableRowLayout = R.layout.schedule_row
+        if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            tableRowLayout = R.layout.schedule_row_with_times
+        var counter = 0
+        for (lesson in lessons) {
+            counter++
+            val tr = addLesson(table, tableRowLayout, lesson)
+            if (counter % 2 == 1) tr.setBackgroundColor(resources.getColor(R.color.gray_500))
+        }
+    }
+
+    private fun addLesson(table: TableLayout ,tableRowLayout: Int, lesson: Lesson): TableRow{
+        return TableRow(this)
+    }
+
+    /**
+     * Этот метод используется чтобы поделиться расписанием на этот день.
+     * @return
+     */
+    private fun shareSchedule(): Boolean {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.setType("text/plain")
+        var schedule = getString(R.string.date) + ": "
+        schedule = schedule + DateConverters.toString(date) + "\n"
+        schedule += "\n"
+        for (lesson in lessons.value!!) {
+            schedule += lesson.toString()
+            schedule += "\n"
+        }
+        schedule += "\n"
+        intent.putExtra(Intent.EXTRA_TEXT, schedule)
+        val shareIntent = Intent.createChooser(intent, null)
+        startActivity(shareIntent)
+        return true
+    }
+
+    /**
+     * Этот метод используется чтобы открыть экран с заметками для этого дня.
+     */
+    private fun openNotesActivity() {
+        val bundle = Bundle()
+        val intent = Intent(this, NotesActivity::class.java)
+        bundle.putString("group", group)
+        bundle.putString("date", DateConverters.toString(date))
+        intent.putExtras(bundle)
+        startActivity(intent)
     }
 }

@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,10 +28,23 @@ import com.ghostwalker18.schedulePATC.databinding.ActivityShareAppBinding
  */
 class ShareAppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShareAppBinding
+
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         binding = ActivityShareAppBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.shareLink.setOnClickListener { shareLink() }
+    }
+
+    /**
+     * Этот метод используется, чтобы поделиться ссылокой на расписание в RuStore.
+     */
+    private fun shareLink() {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("text/plain")
+        shareIntent.putExtra(Intent.EXTRA_TEXT, resources.getText(R.string.rustore_link))
+        startActivity(shareIntent)
     }
 }
