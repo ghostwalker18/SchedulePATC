@@ -53,12 +53,13 @@ class ScheduleItemActivity : AppCompatActivity() {
         date = DateConverters
             .fromString(bundle.getString("date"))
         date?.set(Calendar.DAY_OF_WEEK, bundle.getInt("dayOfWeek"))
-        binding.toolbar.setTitle(generateTitle(date!!))
+        binding.toolbar.title = generateTitle(date!!)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         repository = ScheduleApp.getInstance().getScheduleRepository()
         lessons = repository.getLessons(group, teacher, date!!)
         lessons.observe(this){ lessons -> populateTable(binding.schedule, lessons) }
+        binding.notes.setOnClickListener { openNotesActivity() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

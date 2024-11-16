@@ -55,11 +55,11 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
     companion object {
         private val weekdaysNumbers = HashMap<Int, Int>()
         init {
-            weekdaysNumbers[R.string.monday] = Calendar.MONDAY;
-            weekdaysNumbers[R.string.tuesday] = Calendar.TUESDAY;
-            weekdaysNumbers[R.string.wednesday] = Calendar.WEDNESDAY;
-            weekdaysNumbers[R.string.thursday] = Calendar.THURSDAY;
-            weekdaysNumbers[R.string.friday] = Calendar.FRIDAY;
+            weekdaysNumbers[R.string.monday] = Calendar.MONDAY
+            weekdaysNumbers[R.string.tuesday] = Calendar.TUESDAY
+            weekdaysNumbers[R.string.wednesday] = Calendar.WEDNESDAY
+            weekdaysNumbers[R.string.thursday] = Calendar.THURSDAY
+            weekdaysNumbers[R.string.friday] = Calendar.FRIDAY
         }
 
         fun newInstance(dayOfWeekId: Int): ScheduleItemFragment {
@@ -92,22 +92,20 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.button.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-        state.getCalendar().observe(viewLifecycleOwner) { calendar->
+        state.getCalendar().observe(viewLifecycleOwner) {
             date.setValue(
                 Calendar.Builder()
                     .setWeekDate(state.getYear(), state.getWeek(), weekdaysNumbers[dayOfWeekID]!!)
                     .build()
             )
         }
-        state.getGroup().observe(viewLifecycleOwner) { group ->
+        state.getGroup().observe(viewLifecycleOwner) {
             lessons = repository.getLessons(
                 state.getGroup().value,
                 state.getTeacher().value!!,
                 date.value!!
-            )!!
-            lessons.observe(viewLifecycleOwner){ lessons: Array<Lesson> ->
-                    populateTable(binding.schedule, lessons)
-                }
+            )
+            lessons.observe(viewLifecycleOwner){ populateTable(binding.schedule, it) }
         }
 
         date.observe(viewLifecycleOwner) { date: Calendar ->
@@ -117,7 +115,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
                 state.getGroup().value,
                 state.getTeacher().value,
                 date
-            )!!
+            )
             lessons.observe(
                 viewLifecycleOwner){ lessons: Array<Lesson> ->
                 populateTable(binding.schedule, lessons)
@@ -210,13 +208,12 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
 
     /**
      * Этот метод открывает отдельное окно для отображения расписания.
-     * @param view этот параметр требуется для соответствия сигнатуре Listener
      */
     private fun openScheduleInActivity() {
         val bundle = Bundle()
-        bundle.putString("group", state.getGroup().getValue())
-        bundle.putString("teacher", state.getTeacher().getValue())
-        bundle.putString("date", DateConverters.toString(state.getCalendar().getValue()))
+        bundle.putString("group", state.getGroup().value)
+        bundle.putString("teacher", state.getTeacher().value)
+        bundle.putString("date", DateConverters.toString(state.getCalendar().value))
         bundle.putInt("dayOfWeek", weekdaysNumbers[dayOfWeekID]!!)
         val intent = Intent(this.activity, ScheduleItemActivity::class.java)
         intent.putExtras(bundle)
@@ -241,7 +238,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
      * @param dayOfWeekId id строкового ресурса соответствующего дня недели
      * @return заголовок
      */
-    private fun generateTitle(date: Calendar, dayOfWeekId: Int): String? {
+    private fun generateTitle(date: Calendar, dayOfWeekId: Int): String {
         val dayOfWeek = resources.getString(dayOfWeekId)
         //Month is a number in 0 - 11
         val month = date[Calendar.MONTH] + 1

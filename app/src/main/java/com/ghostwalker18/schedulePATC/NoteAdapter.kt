@@ -34,8 +34,8 @@ import kotlin.properties.Delegates
  */
 class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerView.Adapter<NoteAdapter.ViewHolder>(){
     interface OnNoteClickListener {
-        fun onNoteSelected(note: Note?, position: Int)
-        fun onNoteUnselected(note: Note?, position: Int)
+        fun onNoteSelected(note: Note, position: Int)
+        fun onNoteUnselected(note: Note, position: Int)
     }
 
     private val notes: Array<Note>

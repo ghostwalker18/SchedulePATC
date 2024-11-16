@@ -84,6 +84,23 @@ class NotesModel : ViewModel(){
     }
 
     /**
+     * Этот метод задает ключевое слова для поиска заметок по нему и выдачи их.
+     * @param keyword ключевое слово
+     */
+    fun setKeyword(keyword: String?) {
+        this.keyword = keyword
+        notes.removeSource(notesMediator)
+        if (keyword != null) notesMediator = repository.getNotes(group!!, keyword) else {
+            if (startDate.value != null && endDate.value != null && group != null) notesMediator =
+                repository.getNotes(
+                    group!!,
+                    generateDateSequence(startDate.value!!, endDate.value!!)
+                )
+        }
+        notes.addSource(notesMediator, notes::setValue)
+    }
+
+    /**
      * Этот метод устанавливает начальную дату временного интервала выдачи заметок.
      * @param date начальная дата
      */
@@ -93,7 +110,7 @@ class NotesModel : ViewModel(){
         if (startDate.value != null && endDate.value != null && group != null)
             notesMediator = repository
                 .getNotes(group!!, generateDateSequence(startDate.value!!, endDate.value!!))
-        notes.addSource(notesMediator){ x -> notes.setValue(x) }
+        notes.addSource(notesMediator, notes::setValue)
     }
 
     /**
@@ -106,7 +123,7 @@ class NotesModel : ViewModel(){
         if (startDate.value != null && endDate.value != null && group != null)
             notesMediator = repository
                 .getNotes(group!!, generateDateSequence(startDate.value!!, endDate.value!!))
-        notes.addSource(notesMediator){ x -> notes.setValue(x) }
+        notes.addSource(notesMediator, notes::setValue)
     }
 
     /**

@@ -32,16 +32,16 @@ abstract class AppDatabase : RoomDatabase(){
     abstract fun noteDao() : NoteDao
     companion object{
         fun getInstance(context : Context) : AppDatabase{
-            val callback = object : RoomDatabase.Callback(){
+            val callback = object : Callback(){
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-                    db.execSQL(UPDATE_DAY_TRIGGER_1);
-                    db.execSQL(UPDATE_DAY_TRIGGER_2);
+                    db.execSQL(UPDATE_DAY_TRIGGER_1)
+                    db.execSQL(UPDATE_DAY_TRIGGER_2)
                 }
             }
             return databaseBuilder(context, AppDatabase::class.java, "database")
                 .addCallback(callback)
-                .build();
+                .build()
         }
 
         const val UPDATE_DAY_TRIGGER_1 =

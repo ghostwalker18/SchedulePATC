@@ -104,6 +104,7 @@ class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
          * Этот метод позволяет получить доступ к экзэмпляру приложения
          * @return приложение
          */
+        @JvmStatic
         fun getInstance(): ScheduleApp {
             return instance
         }

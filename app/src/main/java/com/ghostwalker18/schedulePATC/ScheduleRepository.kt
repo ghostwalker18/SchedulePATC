@@ -85,7 +85,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      *
      * @return статус состояния
      */
-    fun getStatus(): LiveData<Status>? {
+    fun getStatus(): LiveData<Status> {
         return status
     }
 
@@ -128,7 +128,15 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      */
 
     fun getLessons(group: String?, teacher: String?, date: Calendar): LiveData<Array<Lesson>>{
-        TODO("not yet implemented")
+        return if (teacher != null && group != null) db.lessonDao().getLessonsForGroupWithTeacher(
+            date,
+            group,
+            teacher
+        ) else if (teacher != null) db.lessonDao()
+            .getLessonsForTeacher(date, teacher) else if (group != null) db.lessonDao()
+            .getLessonsForGroup(date, group) else MutableLiveData(
+            arrayOf()
+        )
     }
 
     /**

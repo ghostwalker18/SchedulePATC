@@ -32,11 +32,11 @@ import java.util.Calendar
 data class Note(
     @PrimaryKey(autoGenerate = true) val id : Int,
     @TypeConverters(DateConverters::class)
-    @ColumnInfo(name = "noteDate") val date : Calendar,
-    @ColumnInfo(name = "noteGroup") val group : String,
-    @ColumnInfo(name = "noteTheme") val theme: String?,
-    @ColumnInfo(name = "noteText") val text: String,
-    @ColumnInfo(name = "notePhotoID") val photoID: String?
+    @ColumnInfo(name = "noteDate") var date : Calendar,
+    @ColumnInfo(name = "noteGroup") var group : String,
+    @ColumnInfo(name = "noteTheme") var theme: String?,
+    @ColumnInfo(name = "noteText") var text: String,
+    @ColumnInfo(name = "notePhotoID") var photoID: String?
 ){
     override fun toString(): String {
         val resources = ScheduleApp.getInstance().resources

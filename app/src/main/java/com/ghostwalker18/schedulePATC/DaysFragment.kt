@@ -52,11 +52,8 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         _binding = FragmentDaysBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -84,7 +81,7 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
 
     override fun onStop() {
         super.onStop()
-        repository.saveGroup(state.getGroup().getValue())
+        repository.saveGroup(state.getGroup().value)
     }
 
     override fun onDestroyView() {
@@ -142,7 +139,7 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
      */
     private fun setUpTeacherSearch(){
         binding.teacher.apply {
-            setOnItemClickListener { adapterView, view, i, l ->
+            setOnItemClickListener { adapterView, view, i, _ ->
                 run {
                     val teacher = adapterView.getItemAtPosition(i).toString()
                     state.setTeacher(teacher)
@@ -158,8 +155,8 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
             state.setTeacher(null)
             binding.teacher.setText("")
         }
-        repository.getTeachers().observe(viewLifecycleOwner) { strings ->
-            val adapter = ArrayAdapter(requireContext(), R.layout.autocomplete_item_layout, strings)
+        repository.getTeachers().observe(viewLifecycleOwner) {
+            val adapter = ArrayAdapter(requireContext(), R.layout.autocomplete_item_layout, it)
             binding.teacher.setAdapter(adapter)
             state.setTeacher(binding.teacher.text.toString())
         }

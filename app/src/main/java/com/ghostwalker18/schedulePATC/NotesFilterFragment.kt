@@ -14,12 +14,22 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
+import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.DatePicker
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.ghostwalker18.schedulePATC.databinding.FragmentFilterBinding
+import java.util.Calendar
 
 /**
  * Этот класс служит для отображения панели фильтров заметок.
@@ -28,8 +38,15 @@ import com.ghostwalker18.schedulePATC.databinding.FragmentFilterBinding
  * @since 1.0
  */
 class NotesFilterFragment : Fragment() {
+    private val repository = ScheduleApp.getInstance().getScheduleRepository()
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
+    private lateinit var model: NotesModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        model = ViewModelProvider(requireActivity())[NotesModel::class.java]
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,8 +56,100 @@ class NotesFilterFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.setStartDate.setOnClickListener { setStartDate() }
+        binding.setEndDate.setOnClickListener { setEndDate() }
+        binding.close.setOnClickListener { close() }
+        binding.groupClear.setOnClickListener {
+            binding.group.setText("")
+            model.setGroup(null)
+        }
+
+        binding.group.setText(model.getGroup())
+        repository.getGroups().observe(viewLifecycleOwner){
+            val adapter = ArrayAdapter(requireContext(), R.layout.autocomplete_item_layout, it)
+            binding.group.setAdapter(adapter)
+        }
+        binding.group.setOnItemClickListener { adapterView, view, i, _ ->
+            model.setGroup(adapterView.getItemAtPosition(i).toString())
+            val input = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            input.hideSoftInputFromWindow(view.applicationWindowToken, 0)
+        }
+
+        model.getStartDate().observe(viewLifecycleOwner){
+            binding.startDate.text = DateConverters.toString(it)
+        }
+
+        model.getEndDate().observe(viewLifecycleOwner){
+            binding.endDate.text = DateConverters.toString(it)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    /**
+     * Этот метод служит для сокрытия фргмента с экрана.
+     */
+    private fun close() {
+        parentFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out)
+            .remove(this)
+            .commit()
+    }
+
+    /**
+     * Этот метод открывает ввод для задания начальной даты выдачи заметок.
+     */
+    private fun setStartDate() {
+        val datePickerFragment = DatePickerFragment("start")
+        datePickerFragment.show(childFragmentManager, "1")
+    }
+
+    /**
+     * Этот метод открывает ввод для задания конечной даты вывода заметок.
+     */
+    private fun setEndDate() {
+        val datePickerFragment = DatePickerFragment("end")
+        datePickerFragment.show(childFragmentManager, "2")
+    }
+
+    /**
+     * Этот класс служит для задания начальной/конечной даты выдачи заметок.
+     */
+    class DatePickerFragment(dateType: String): DialogFragment(), OnDateSetListener {
+        private val dateType: String
+        private lateinit var model: NotesModel
+
+        init {
+            this.dateType = dateType
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            model = ViewModelProvider(requireActivity())[NotesModel::class.java]
+            // Use the current date as the default date in the picker.
+            // Use the current date as the default date in the picker.
+            val c = Calendar.getInstance()
+            val year = c[Calendar.YEAR]
+            val month = c[Calendar.MONTH]
+            val day = c[Calendar.DAY_OF_MONTH]
+            // Create a new instance of DatePickerDialog and return it.
+            return DatePickerDialog(requireContext(), this, year, month, day)
+        }
+
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, day: Int) {
+            val c = Calendar.getInstance()
+            c[year, month] = day
+
+            when (dateType) {
+                "start" -> model.setStartDate(c)
+                "end" -> model.setEndDate(c)
+            }
+        }
     }
 }

@@ -34,7 +34,7 @@ class JsoupConverterFactory : Converter.Factory(){
                                        annotations: Array<Annotation>,
                                        retrofit: Retrofit): Converter<ResponseBody, *>? {
         return when (type) {
-            Document::class.java -> JsoupConverter(retrofit!!.baseUrl().toString())
+            Document::class.java -> JsoupConverter(retrofit.baseUrl().toString())
             else -> null
         }
     }

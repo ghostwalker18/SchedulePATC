@@ -14,9 +14,7 @@
 
 package com.ghostwalker18.schedulePATC
 
-import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xwpf.usermodel.XWPFDocument
-import java.io.File
 
 /**
  * Этот интерфейс описывет методы для преобразования pdf-файлов расписания ПАТТ в коллекции
@@ -45,7 +43,7 @@ interface IConverter {
     /**
      * Этот метод используется для обработки файла расписания третьего корпуса на ул.Ленинградская.
      *
-     * @param pdf эксель файл расписания для второго корпуса
+     * @param pdfFile эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
     fun convertThirdCorpus(pdfFile: XWPFDocument) : List<Lesson>
