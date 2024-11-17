@@ -66,7 +66,7 @@ class NotesActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             group = bundle.getString("group")
-            startDate = DateConverters.fromString(bundle.getString("date"))
+            startDate = DateConverters().fromString(bundle.getString("date"))
             endDate = startDate
             if (savedInstanceState == null) {
                 model.setGroup(group)
@@ -120,7 +120,7 @@ class NotesActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("group", group)
         if (startDate != null) {
-            bundle.putString("date", DateConverters.toString(startDate))
+            bundle.putString("date", DateConverters().toString(startDate))
         }
         intent.putExtras(bundle)
         startActivity(intent)

@@ -79,11 +79,11 @@ class NotesFilterFragment : Fragment() {
         }
 
         model.getStartDate().observe(viewLifecycleOwner){
-            binding.startDate.text = DateConverters.toString(it)
+            binding.startDate.text = DateConverters().toString(it)
         }
 
         model.getEndDate().observe(viewLifecycleOwner){
-            binding.endDate.text = DateConverters.toString(it)
+            binding.endDate.text = DateConverters().toString(it)
         }
     }
 

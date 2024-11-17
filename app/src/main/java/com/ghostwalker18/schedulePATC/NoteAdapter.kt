@@ -56,7 +56,7 @@ class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerV
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val note = notes[position]
-        holder.binding.date.text = DateConverters.toString(note.date)
+        holder.binding.date.text = DateConverters().toString(note.date)
         holder.binding.theme.text = note.theme
         holder.binding.text.text = note.text
         canAccessPhoto = checkPhotoAccess()

@@ -42,27 +42,6 @@ class DateConverters {
         )
 
         /**
-         * Этот метод преобразует Calendar сущнисти в String для БД.
-         * @param date  the entity attribute value to be converted
-         * @return
-         */
-        @TypeConverter
-        fun toString(date: Calendar?): String? {
-            return date?.let { dateFormatDb.format(it.time)}
-        }
-
-        /**
-         * Этот метод преобразует String из БД в Calendar сущности.
-         * @param date  the data from the database column to be
-         *                converted
-         * @return
-         */
-        @TypeConverter
-        fun fromString(date: String?): Calendar? {
-            return stringToCal(date, dateFormatDb)
-        }
-
-        /**
          * Этот метод используется для преобразования строки в дату согласно заданному формату.
          * @param date строка даты
          * @param format формат даты
@@ -80,6 +59,27 @@ class DateConverters {
                 }
             }
         }
+    }
+
+    /**
+     * Этот метод преобразует Calendar сущнисти в String для БД.
+     * @param date  the entity attribute value to be converted
+     * @return
+     */
+    @TypeConverter
+    fun toString(date: Calendar?): String? {
+        return date?.let { dateFormatDb.format(it.time)}
+    }
+
+    /**
+     * Этот метод преобразует String из БД в Calendar сущности.
+     * @param date  the data from the database column to be
+     *                converted
+     * @return
+     */
+    @TypeConverter
+    fun fromString(value: String?): Calendar? {
+        return stringToCal(value, dateFormatDb)
     }
 
     /**

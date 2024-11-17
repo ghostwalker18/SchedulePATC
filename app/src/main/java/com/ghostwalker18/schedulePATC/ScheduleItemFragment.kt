@@ -148,7 +148,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
      */
     fun getSchedule(): String {
         var schedule = getString(R.string.date) + ": "
-        schedule = schedule + DateConverters.toString(date.value) + "\n"
+        schedule = schedule + DateConverters().toString(date.value) + "\n"
         schedule += "\n"
         for (lesson in lessons.value!!) {
             schedule += lesson.toString()
@@ -213,7 +213,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         val bundle = Bundle()
         bundle.putString("group", state.getGroup().value)
         bundle.putString("teacher", state.getTeacher().value)
-        bundle.putString("date", DateConverters.toString(state.getCalendar().value))
+        bundle.putString("date", DateConverters().toString(state.getCalendar().value))
         bundle.putInt("dayOfWeek", weekdaysNumbers[dayOfWeekID]!!)
         val intent = Intent(this.activity, ScheduleItemActivity::class.java)
         intent.putExtras(bundle)
@@ -227,7 +227,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         val bundle = Bundle()
         val intent = Intent(this.activity, NotesActivity::class.java)
         bundle.putString("group", state.getGroup().value)
-        bundle.putString("date", DateConverters.toString(date.value))
+        bundle.putString("date", DateConverters().toString(date.value))
         intent.putExtras(bundle)
         startActivity(intent)
     }

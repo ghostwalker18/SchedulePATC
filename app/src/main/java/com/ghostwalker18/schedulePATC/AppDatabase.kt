@@ -18,6 +18,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
@@ -27,6 +28,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * @since 1.0
  */
 @Database(entities = [Lesson::class, Note:: class], version = 1)
+@TypeConverters(DateConverters::class)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun lessonDao() : LessonDao
     abstract fun noteDao() : NoteDao

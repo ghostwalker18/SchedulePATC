@@ -31,7 +31,6 @@ import java.util.Calendar
 @Entity(tableName = "tblSchedule",
     primaryKeys = ["lessonDate", "lessonNumber", "groupName", "subjectName"])
 data class Lesson(
-    @TypeConverters(DateConverters::class)
     @ColumnInfo(name = "lessonDate") val date : Calendar,
     @ColumnInfo(name = "lessonNumber") val lessonNumber : String,
     @ColumnInfo(name="roomNumber") val roomNumber : String?,

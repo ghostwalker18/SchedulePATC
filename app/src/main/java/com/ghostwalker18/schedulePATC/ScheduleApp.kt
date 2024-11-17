@@ -19,6 +19,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import java.util.Locale
 
@@ -55,8 +56,13 @@ class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         database = AppDatabase.getInstance(this)
+        preferences = PreferenceManager.getDefaultSharedPreferences(this)
         scheduleRepository = ScheduleRepository(this, database, NetworkService(this, baseUri,preferences))
         scheduleRepository.update()
+        notesRepository = NotesRepository(database)
+        val theme = preferences.getString("theme", "")
+        setTheme(theme)
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     /**
@@ -98,7 +104,7 @@ class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
 
     companion object {
         const val baseUri = "https://patt.karelia.ru/students/schedule"
-        lateinit var instance: ScheduleApp
+        private lateinit var instance: ScheduleApp
 
         /**
          * Этот метод позволяет получить доступ к экзэмпляру приложения

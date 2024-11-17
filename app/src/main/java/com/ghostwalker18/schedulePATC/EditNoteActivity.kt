@@ -103,12 +103,12 @@ class EditNoteActivity : AppCompatActivity() {
             if (bundle.getString("group") != null)
                 model.setGroup(bundle.getString("group"))
             if (bundle.getString("date") != null)
-                model.setDate(DateConverters.fromString(bundle.getString("date")))
+                model.setDate(DateConverters().fromString(bundle.getString("date")))
         }
 
         model = ViewModelProvider(this)[EditNoteModel::class.java]
 
-        model.getDate().observe(this){ binding.date.text = DateConverters.toString(it) }
+        model.getDate().observe(this){ binding.date.text = DateConverters().toString(it) }
 
         model.getTheme().observe(this){ binding.theme.setText(it)}
         model.getThemes().observe(this){

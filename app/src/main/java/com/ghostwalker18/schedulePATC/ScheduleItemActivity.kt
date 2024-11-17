@@ -50,8 +50,7 @@ class ScheduleItemActivity : AppCompatActivity() {
         }
         teacher = bundle.getString("teacher")
         group = bundle.getString("group")
-        date = DateConverters
-            .fromString(bundle.getString("date"))
+        date = DateConverters().fromString(bundle.getString("date"))
         date?.set(Calendar.DAY_OF_WEEK, bundle.getInt("dayOfWeek"))
         binding.toolbar.title = generateTitle(date!!)
         setSupportActionBar(binding.toolbar)
@@ -75,7 +74,7 @@ class ScheduleItemActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("teacher", teacher)
         outState.putString("group", group)
-        outState.putString("date", DateConverters.toString(date))
+        outState.putString("date", DateConverters().toString(date))
         super.onSaveInstanceState(outState)
     }
 
@@ -130,7 +129,7 @@ class ScheduleItemActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setType("text/plain")
         var schedule = getString(R.string.date) + ": "
-        schedule = schedule + DateConverters.toString(date) + "\n"
+        schedule = schedule + DateConverters().toString(date) + "\n"
         schedule += "\n"
         for (lesson in lessons.value!!) {
             schedule += lesson.toString()
@@ -150,7 +149,7 @@ class ScheduleItemActivity : AppCompatActivity() {
         val bundle = Bundle()
         val intent = Intent(this, NotesActivity::class.java)
         bundle.putString("group", group)
-        bundle.putString("date", DateConverters.toString(date))
+        bundle.putString("date", DateConverters().toString(date))
         intent.putExtras(bundle)
         startActivity(intent)
     }

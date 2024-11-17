@@ -97,9 +97,14 @@ class MainActivity : AppCompatActivity() {
                 ScheduleApp.getInstance()
                     .getScheduleRepository()
                     .getLinksForSecondCorpusSchedule()
+            val linksForThirdCorpusSchedule =
+                ScheduleApp.getInstance()
+                    .getScheduleRepository()
+                    .getLinksForThirdCorpusSchedule()
             val links: MutableList<String> = ArrayList()
             links.addAll(linksForFirstCorpusSchedule)
             links.addAll(linksForSecondCorpusSchedule)
+            links.addAll(linksForThirdCorpusSchedule)
             val downloadManager = application.getSystemService(DownloadManager::class.java)
             for (link in links) {
                 val request =

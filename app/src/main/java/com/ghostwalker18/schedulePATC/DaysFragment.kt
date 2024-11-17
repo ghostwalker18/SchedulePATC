@@ -65,7 +65,7 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
         enableTeacherSearch()
         binding.forwardButton.setOnClickListener{ state.goNextWeek() }
         binding.backButton.setOnClickListener{ state.goPreviousWeek() }
-        repository.getStatus()!!.observe(viewLifecycleOwner) { (text, progress) ->
+        repository.getStatus().observe(viewLifecycleOwner) { (text, progress) ->
             binding.updateScheduleProgress.progress = progress
             binding.updateScheduleStatus.text = text
         }
