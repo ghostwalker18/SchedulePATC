@@ -16,7 +16,6 @@ package com.ghostwalker18.schedulePATC
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ghostwalker18.schedulePATC.databinding.ActivityShareAppBinding
 
@@ -29,8 +28,8 @@ import com.ghostwalker18.schedulePATC.databinding.ActivityShareAppBinding
 class ShareAppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShareAppBinding
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivityShareAppBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)

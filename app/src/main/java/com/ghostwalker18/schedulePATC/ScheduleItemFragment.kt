@@ -102,7 +102,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         state.getGroup().observe(viewLifecycleOwner) {
             lessons = repository.getLessons(
                 state.getGroup().value,
-                state.getTeacher().value!!,
+                state.getTeacher().value,
                 date.value!!
             )
             lessons.observe(viewLifecycleOwner){ populateTable(binding.schedule, it) }

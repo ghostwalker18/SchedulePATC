@@ -103,7 +103,7 @@ class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
     }
 
     companion object {
-        const val baseUri = "https://patt.karelia.ru/students/schedule"
+        const val baseUri = "https://patt.karelia.ru/students/schedule/"
         private lateinit var instance: ScheduleApp
 
         /**

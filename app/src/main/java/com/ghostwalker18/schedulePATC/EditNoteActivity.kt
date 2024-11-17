@@ -23,7 +23,6 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
@@ -79,18 +78,20 @@ class EditNoteActivity : AppCompatActivity() {
             val contentUri =
                 FileProvider.getUriForFile(
                     this,
-                    "com.ghostwalker18.schedule.timefilesprovider", newFile
+                    "com.ghostwalker18.schedulePATC.filesprovider", newFile
                 )
             takePhotoLauncher.launch(contentUri)
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivityEditNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        model = ViewModelProvider(this)[EditNoteModel::class.java]
 
         val bundle = intent.extras
         bundle?.run {
@@ -106,7 +107,6 @@ class EditNoteActivity : AppCompatActivity() {
                 model.setDate(DateConverters().fromString(bundle.getString("date")))
         }
 
-        model = ViewModelProvider(this)[EditNoteModel::class.java]
 
         model.getDate().observe(this){ binding.date.text = DateConverters().toString(it) }
 
@@ -116,7 +116,7 @@ class EditNoteActivity : AppCompatActivity() {
             binding.theme.setAdapter(adapter)
         }
 
-        model.getText()?.observe(this){ binding.text.setText(it) }
+        model.getText().observe(this){ binding.text.setText(it) }
 
         model.getGroup().observe(this){ binding.group.setText(it) }
         model.getGroups().observe(this){

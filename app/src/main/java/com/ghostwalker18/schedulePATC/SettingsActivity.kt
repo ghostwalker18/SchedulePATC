@@ -16,7 +16,6 @@ package com.ghostwalker18.schedulePATC
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import com.ghostwalker18.schedulePATC.databinding.ActivitySettingsBinding
@@ -29,8 +28,8 @@ import com.ghostwalker18.schedulePATC.databinding.ActivitySettingsBinding
  */
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding : ActivitySettingsBinding
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
