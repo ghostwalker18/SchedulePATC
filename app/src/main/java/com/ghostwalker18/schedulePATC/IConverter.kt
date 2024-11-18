@@ -14,7 +14,7 @@
 
 package com.ghostwalker18.schedulePATC
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument
+import com.tom_roush.pdfbox.pdmodel.PDDocument
 
 /**
  * Этот интерфейс описывет методы для преобразования pdf-файлов расписания ПАТТ в коллекции
@@ -30,7 +30,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для первого корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertFirstCorpus(pdfFile: XWPFDocument) : List<Lesson>
+    fun convertFirstCorpus(pdfFile: PDDocument) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания второго корпуса на ул.Советская.
@@ -38,7 +38,7 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertSecondCorpus(pdfFile: XWPFDocument) : List<Lesson>
+    fun convertSecondCorpus(pdfFile: PDDocument) : List<Lesson>
 
     /**
      * Этот метод используется для обработки файла расписания третьего корпуса на ул.Ленинградская.
@@ -46,5 +46,5 @@ interface IConverter {
      * @param pdfFile эксель файл расписания для второго корпуса
      * @return лист объектов класса Lesson
      */
-    fun convertThirdCorpus(pdfFile: XWPFDocument) : List<Lesson>
+    fun convertThirdCorpus(pdfFile: PDDocument) : List<Lesson>
 }

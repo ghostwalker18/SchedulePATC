@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             for (link in links) {
                 val request =
                     DownloadManager.Request(Uri.parse(link))
-                        .setMimeType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                        .setMimeType("application/pdf")
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                         .setTitle(getString(R.string.schedule))
                         .setDestinationInExternalPublicDir(

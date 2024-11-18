@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import java.util.Locale
 
 /**
@@ -54,10 +55,12 @@ class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
     override fun onCreate() {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
+        PDFBoxResourceLoader.init(applicationContext)
         instance = this
         database = AppDatabase.getInstance(this)
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        scheduleRepository = ScheduleRepository(this, database, NetworkService(this, baseUri,preferences))
+        scheduleRepository = ScheduleRepository(this, database,
+            NetworkService(this, baseUri,preferences))
         scheduleRepository.update()
         notesRepository = NotesRepository(database)
         val theme = preferences.getString("theme", "")

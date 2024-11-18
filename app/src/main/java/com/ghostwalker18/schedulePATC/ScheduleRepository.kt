@@ -19,9 +19,8 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import com.tom_roush.pdfbox.pdmodel.PDDocument
 import okhttp3.ResponseBody
-import org.apache.poi.openxml4j.util.ZipSecureFile
-import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.jsoup.select.Elements
 import retrofit2.Call
 import retrofit2.Callback
@@ -168,10 +167,10 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     fun getLinksForFirstCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
         val document = api.getMainPage().execute().body()
-        val linkElemens: Elements? = document
+        val linkElements: Elements? = document
             ?.select("h2:contains(Учебный корпус № 1 (пр. Первомайский, 46)) + div a")
-        if (linkElemens != null)
-            for (linkElement in linkElemens)
+        if (linkElements != null)
+            for (linkElement in linkElements)
                 linkElement.attr("href")
                     ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
@@ -186,10 +185,10 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     fun getLinksForSecondCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
         val document = api.getMainPage().execute().body()
-        val linkElemens: Elements? = document
+        val linkElements: Elements? = document
             ?.select("h2:contains(Учебный корпус № 2 (ул. Советская, 11)) + div a")
-        if (linkElemens != null)
-            for (linkElement in linkElemens)
+        if (linkElements != null)
+            for (linkElement in linkElements)
                 linkElement.attr("href")
                     ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
@@ -204,25 +203,13 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     fun getLinksForThirdCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
         val document = api.getMainPage().execute().body()
-        val linkElemens: Elements? = document
+        val linkElements: Elements? = document
             ?.select("h2:contains(Учебный корпус № 3 (ул. Ленинградская, 11)) + div a")
-        if (linkElemens != null)
-            for (linkElement in linkElemens)
+        if (linkElements != null)
+            for (linkElement in linkElements)
                 linkElement.attr("href")
                     ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
-    }
-
-    /**
-     * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
-     *
-     * @param link ссылка на файл
-     * @return имя файла
-     */
-    fun getNameFromLink(link: String): String {
-        val parts = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
-            .toTypedArray()
-        return parts[parts.size - 1]
     }
 
     /**
@@ -258,7 +245,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      * @param parser парсер файлов расписания
      */
     private fun updateSchedule(linksGetter: Callable<List<String>>,
-                               parser: (file: XWPFDocument) -> List<Lesson>) {
+                               parser: (file: PDDocument) -> List<Lesson>) {
         var scheduleLinks: List<String> = java.util.ArrayList()
         try {
             scheduleLinks = linksGetter.call()
@@ -278,9 +265,8 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
                     if (response.body() != null) {
                         status.postValue(
                             Status(context.getString(R.string.schedule_parsing_status), 33))
-                        ZipSecureFile.setMinInflateRatio(0.0075)
                         try {
-                            XWPFDocument(response.body()!!.byteStream()).use { pdfFile ->
+                            PDDocument.load(response.body()!!.byteStream()).use { pdfFile ->
                                 val lessons: List<Lesson> = parser.invoke(pdfFile)
                                 db.lessonDao().insertMany(lessons)
                                 status.postValue(
@@ -290,7 +276,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
                             status.postValue(
                                 Status(context.getString(R.string.schedule_parsing_error), 0))
                         }
-                        response.body()!!.close()
+                        response.body()?.close()
                     }
                 }
 
@@ -309,7 +295,7 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
          * @param link ссылка на файл
          * @return имя файла
          */
-        fun getNameFromLink(link: String): String? {
+        fun getNameFromLink(link: String): String {
             val parts = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             return parts[parts.size - 1]

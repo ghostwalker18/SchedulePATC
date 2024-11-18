@@ -14,7 +14,9 @@
 
 package com.ghostwalker18.schedulePATC
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument
+import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.text.PDFTextStripper
+import java.util.Calendar
 
 /**
  * Этот класс содержит в себе методы для работы с файлами расписания ПАТТ.
@@ -22,15 +24,19 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument
  * @author  Ипатов Никита
  */
 class PDFToLessonsConverter : IConverter {
-    override fun convertFirstCorpus(pdfFile: XWPFDocument): List<Lesson> {
-        TODO("Not yet implemented")
+    override fun convertFirstCorpus(pdfFile: PDDocument): List<Lesson> {
+        val pdfStripper = PDFTextStripper()
+        pdfStripper.startPage = 0
+        pdfStripper.endPage = pdfFile.numberOfPages - 1
+        val parsedText  = pdfStripper.getText(pdfFile)
+        return listOf(Lesson(Calendar.getInstance(), "", "", "", "", "", ""))
     }
 
-    override fun convertSecondCorpus(pdfFile: XWPFDocument): List<Lesson> {
-        TODO("Not yet implemented")
+    override fun convertSecondCorpus(pdfFile: PDDocument): List<Lesson> {
+        return listOf(Lesson(Calendar.getInstance(), "", "", "", "", "", ""))
     }
 
-    override fun convertThirdCorpus(pdfFile: XWPFDocument): List<Lesson> {
-        TODO("Not yet implemented")
+    override fun convertThirdCorpus(pdfFile: PDDocument): List<Lesson> {
+        return listOf(Lesson(Calendar.getInstance(), "", "", "", "", "", ""))
     }
 }
