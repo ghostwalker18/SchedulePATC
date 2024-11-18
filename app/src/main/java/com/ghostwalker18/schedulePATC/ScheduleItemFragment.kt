@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -91,7 +93,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.button.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        binding.button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
         state.getCalendar().observe(viewLifecycleOwner) {
             date.setValue(
                 Calendar.Builder()
@@ -169,7 +171,8 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
                 binding.button.setOnClickListener{ toggleSchedule() }
                 binding.button.setCompoundDrawablesWithIntrinsicBounds(
                     null, null,
-                    resources.getDrawable(R.drawable.baseline_keyboard_arrow_down_24), null
+                    ResourcesCompat.getDrawable(resources,
+                        R.drawable.baseline_keyboard_arrow_down_24, null), null
                 )
             }
 
@@ -198,10 +201,10 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         binding.button.setCompoundDrawablesWithIntrinsicBounds(
             null,
             null,
-            resources.getDrawable(
+            ResourcesCompat.getDrawable(resources,
                 if (_isOpened && mode == "in_fragment")
                     R.drawable.baseline_keyboard_arrow_up_24
-                else R.drawable.baseline_keyboard_arrow_down_24),
+                else R.drawable.baseline_keyboard_arrow_down_24, null),
             null
         )
     }
@@ -283,7 +286,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         for (lesson in lessons) {
             counter++
             val tr: TableRow = addLesson(table, lesson)
-            if (counter % 2 == 1) tr.setBackgroundColor(resources.getColor(R.color.gray_500))
+            if (counter % 2 == 1) tr.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_500))
         }
     }
 

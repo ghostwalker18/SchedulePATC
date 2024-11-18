@@ -34,13 +34,13 @@ interface ScheduleNetworkAPI {
      * @return асинхронный ответ сервера
      */
     @GET
-    fun getScheduleFile(@Url url: String?): Call<ResponseBody?>
+    fun getScheduleFile(@Url url: String): Call<ResponseBody?>
 
     /**
      * Получение страницы с расписанием ПАТТ.
      *
      * @return асинхронный ответ сервера
      */
-    @GET(ScheduleApp.baseUri)
+    @GET(ScheduleApp.baseUri + "/students/schedule/")
     fun getMainPage(): Call<Document?>
 }

@@ -22,6 +22,7 @@ import android.view.MenuItem
 import android.widget.TableLayout
 import android.widget.TableRow
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.ghostwalker18.schedulePATC.databinding.ActivityScheduleItemBinding
 import java.util.Calendar
@@ -113,7 +114,7 @@ class ScheduleItemActivity : AppCompatActivity() {
         for (lesson in lessons) {
             counter++
             val tr = addLesson(table, tableRowLayout, lesson)
-            if (counter % 2 == 1) tr.setBackgroundColor(resources.getColor(R.color.gray_500))
+            if (counter % 2 == 1) tr.setBackgroundColor(ContextCompat.getColor(this, R.color.gray_500))
         }
     }
 

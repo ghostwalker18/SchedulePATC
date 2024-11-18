@@ -13,10 +13,10 @@
   ~ limitations under the License.
   -->
 <resources>
-    <color name="colorPrimary">#00574B</color>
-    <color name="colorSecondary">#06713B</color>
+    <color name="colorPrimary">#004a9a</color>
+    <color name="colorSecondary">#006CA8</color>
     <color name="colorPrimaryDark">#121212</color>
-    <color name="colorAccent">#4169E1</color>
+    <color name="colorAccent">#e6e6e6</color>
     <color name="colorText">#FFF</color>
     <color name="colorBackground">#303030</color>
     <color name="navigationBarColor">#121212</color>

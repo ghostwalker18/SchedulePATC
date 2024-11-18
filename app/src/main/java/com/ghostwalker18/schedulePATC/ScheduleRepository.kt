@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager
 import okhttp3.ResponseBody
 import org.apache.poi.openxml4j.util.ZipSecureFile
 import org.apache.poi.xwpf.usermodel.XWPFDocument
+import org.jsoup.select.Elements
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +43,6 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     private val preferences: SharedPreferences
     private val api : ScheduleNetworkAPI
     private val parser: IConverter = PDFToLessonsConverter()
-    private val mainSelector = "h2:contains(Расписание занятий и объявления:) + div > table > tbody"
     private val status = MutableLiveData<Status>()
     private val updateExecutorService = Executors.newFixedThreadPool(4)
     private val updateFutures: MutableList<Future<*>> = ArrayList()
@@ -167,6 +167,13 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      */
     fun getLinksForFirstCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
+        val document = api.getMainPage().execute().body()
+        val linkElemens: Elements? = document
+            ?.select("h2:contains(Учебный корпус № 1 (пр. Первомайский, 46)) + div a")
+        if (linkElemens != null)
+            for (linkElement in linkElemens)
+                linkElement.attr("href")
+                    ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
     }
 
@@ -178,6 +185,13 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      */
     fun getLinksForSecondCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
+        val document = api.getMainPage().execute().body()
+        val linkElemens: Elements? = document
+            ?.select("h2:contains(Учебный корпус № 2 (ул. Советская, 11)) + div a")
+        if (linkElemens != null)
+            for (linkElement in linkElemens)
+                linkElement.attr("href")
+                    ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
     }
 
@@ -189,6 +203,13 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      */
     fun getLinksForThirdCorpusSchedule(): List<String> {
         val links: MutableList<String> = java.util.ArrayList()
+        val document = api.getMainPage().execute().body()
+        val linkElemens: Elements? = document
+            ?.select("h2:contains(Учебный корпус № 3 (ул. Ленинградская, 11)) + div a")
+        if (linkElemens != null)
+            for (linkElement in linkElemens)
+                linkElement.attr("href")
+                    ?.let { if (it.endsWith(".pdf")) links.add(ScheduleApp.baseUri + it) }
         return links
     }
 
@@ -204,18 +225,27 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
         return parts[parts.size - 1]
     }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями для первого корпуса
+     */
     private fun updateFirstCorpus(){
         updateSchedule(this::getLinksForFirstCorpusSchedule){
             parser.convertFirstCorpus(it)
         }
     }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями для второго корпуса
+     */
     private fun updateSecondCorpus(){
         updateSchedule(this::getLinksForSecondCorpusSchedule){
             parser.convertSecondCorpus(it)
         }
     }
 
+    /**
+     * Этот метод используется для обновления БД приложения занятиями для третьего корпуса
+     */
     private fun updateThirdCorpus(){
         updateSchedule(this::getLinksForThirdCorpusSchedule){
             parser.convertThirdCorpus(it)
@@ -227,9 +257,9 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
      * @param linksGetter метод для получения ссылок на файлы расписания
      * @param parser парсер файлов расписания
      */
-    private fun updateSchedule(linksGetter: Callable<List<String?>>,
+    private fun updateSchedule(linksGetter: Callable<List<String>>,
                                parser: (file: XWPFDocument) -> List<Lesson>) {
-        var scheduleLinks: List<String?> = java.util.ArrayList()
+        var scheduleLinks: List<String> = java.util.ArrayList()
         try {
             scheduleLinks = linksGetter.call()
         } catch (ignored: Exception) { /*Not required*/ }
@@ -273,7 +303,6 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     }
 
     companion object {
-
         /**
          * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
          *
