@@ -70,7 +70,6 @@ class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerV
         if (note.photoID != null && !canAccessPhoto) holder.binding.error.setText(R.string.gallery_access_denied)
         holder.binding.note.setOnClickListener{
             holder.isSelected = !holder.isSelected
-            holder.binding.checked.visibility = if(holder.isSelected) View.VISIBLE else View.GONE
             if (holder.isSelected) {
                 listener.onNoteSelected(note, position)
             } else {
@@ -111,8 +110,13 @@ class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerV
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding: FragmentNoteBinding
         var isSelected = false
+            set(value) {
+                field = value
+                binding.checked.visibility = if (isSelected) View.VISIBLE else View.GONE
+            }
         init {
             binding = FragmentNoteBinding.bind(itemView)
         }
+
     }
 }

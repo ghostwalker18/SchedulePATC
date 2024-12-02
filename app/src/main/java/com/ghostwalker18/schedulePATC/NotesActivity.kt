@@ -18,12 +18,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.ghostwalker18.schedulePATC.databinding.ActivityNotesBinding
 import java.util.Calendar
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Этот классс представляет собой экран приложения, на котором отображаются заметки к занятиям.
@@ -32,16 +34,24 @@ import java.util.Calendar
  * @since 1.0
  */
 class NotesActivity : AppCompatActivity() {
-    private var selectedNotes: MutableMap<Int, Note> = HashMap()
+    private var selectedNotes: MutableMap<Int, Note> = ConcurrentHashMap()
     private val repository = ScheduleApp.getInstance().getNotesRepository()
     private val listener = object : NoteAdapter.OnNoteClickListener {
         override fun onNoteSelected(note: Note, position: Int) {
             selectedNotes[position] = note
+            binding.selectionPanel.visibility = View.VISIBLE
+            binding.searchBar.visibility = View.GONE
+            binding.selectedCount.text = selectedNotes.size.toString()
             decideMenuOptions()
         }
 
         override fun onNoteUnselected(note: Note, position: Int) {
             selectedNotes.remove(position, note)
+            if (selectedNotes.isEmpty()) {
+                binding.selectionPanel.visibility = View.GONE
+                binding.searchBar.visibility = View.VISIBLE
+            }
+            binding.selectedCount.text = selectedNotes.size.toString()
             decideMenuOptions()
         }
     }
@@ -86,6 +96,14 @@ class NotesActivity : AppCompatActivity() {
                     if (keyword == "") keyword = null
                     model.setKeyword(keyword)
                 }
+            }
+        }
+
+        binding.selectionCancel.setOnClickListener {
+            for (position in selectedNotes.keys) {
+                val item = binding.notes.findViewHolderForAdapterPosition(position) as NoteAdapter.ViewHolder
+                item?.isSelected = false
+                listener.onNoteUnselected(selectedNotes[position]!!, position)
             }
         }
     }
