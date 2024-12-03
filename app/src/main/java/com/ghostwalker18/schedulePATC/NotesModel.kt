@@ -30,10 +30,14 @@ class NotesModel : ViewModel(){
     private val repository = ScheduleApp.getInstance().getNotesRepository()
     private val notes = MediatorLiveData<Array<Note>>()
     private var notesMediator: LiveData<Array<Note>> = MutableLiveData()
-    private val startDate = MutableLiveData<Calendar?>()
-    private val endDate = MutableLiveData<Calendar?>()
+    private val startDate = MutableLiveData(Calendar.getInstance())
+    private val endDate = MutableLiveData(Calendar.getInstance())
     private var group: String? = null
     private var keyword: String? = null
+
+    init {
+        setGroup(ScheduleApp.getInstance().getScheduleRepository().getSavedGroup())
+    }
 
     /**
      * Этот метод выдает заметки для заданнной группы и временного интервала.

@@ -45,10 +45,10 @@ import java.util.Random
  */
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
+    private lateinit var model: EditNoteModel
     private var photoUri: Uri? = null
     private var isSaved = false
     private val nameSuffixGenerator = Random()
-    private lateinit var model: EditNoteModel
     private val takePhotoLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()) {
         model.setPhotoID(photoUri)
@@ -98,13 +98,10 @@ class EditNoteActivity : AppCompatActivity() {
             if (bundle.getInt("noteID") != 0) {
                 model.setNoteID(bundle.getInt("noteID"))
                 actionBar?.setTitle(R.string.edit_note)
-            } else {
-                actionBar?.setTitle(R.string.add_note)
             }
-            if (bundle.getString("group") != null)
-                model.setGroup(bundle.getString("group"))
-            if (bundle.getString("date") != null)
-                model.setDate(DateConverters().fromString(bundle.getString("date")))
+            bundle.getString("group") ?: model.setGroup(bundle.getString("group"))
+            bundle.getString("date") ?: model.setDate(DateConverters()
+                .fromString(bundle.getString("date")))
         }
 
 

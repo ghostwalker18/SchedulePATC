@@ -36,10 +36,16 @@ class EditNoteModel : ViewModel(){
     private val theme = MutableLiveData("")
     private val text = MutableLiveData("")
     private val photoID = MutableLiveData<Uri?>()
-    private val date = MutableLiveData<Calendar>()
-    private val group = MutableLiveData<String>()
+    private val date = MutableLiveData(Calendar.getInstance())
+    private val group = MutableLiveData<String>(scheduleRepository.getSavedGroup())
     private var themes: LiveData<Array<String>> = MutableLiveData()
     private var isEdited = false
+
+    init {
+        scheduleRepository.getSavedGroup() ?: noteThemesMediator.addSource(
+            scheduleRepository.getSubjects(scheduleRepository.getSavedGroup()!!),
+            noteThemesMediator::setValue)
+    }
 
     /**
      * Этот метод позволяет задать id заметки для редактирования.
