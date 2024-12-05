@@ -14,6 +14,8 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -207,6 +209,10 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
                 else R.drawable.baseline_keyboard_arrow_down_24, null),
             null
         )
+        val open = AnimatorInflater
+            .loadAnimator(requireContext(), R.animator.drop_down) as AnimatorSet
+        open.setTarget(binding.schedule)
+        open.start()
     }
 
     /**

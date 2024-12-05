@@ -14,11 +14,15 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
@@ -61,6 +65,9 @@ class NotesActivity : AppCompatActivity() {
     private var isEditAvailable = false
     private var isDeleteAvailable = false
     private var isShareAvailable = false
+    private var isEditChanged = true
+    private var isDeleteChanged = true
+    private var isShareChanged = true
     private lateinit var binding : ActivityNotesBinding
     private lateinit var model: NotesModel
     private lateinit var filter: NotesFilterFragment
@@ -72,15 +79,17 @@ class NotesActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         model = ViewModelProvider(this)[NotesModel::class.java]
-        val bundle = intent.extras
-        if (bundle != null) {
-            group = bundle.getString("group")
-            startDate = DateConverters().fromString(bundle.getString("date"))
+
+        intent.extras?.run {
+            group = getString("group")
+            startDate = DateConverters().fromString(getString("date"))
             endDate = startDate
-            if (savedInstanceState == null) {
-                model.setGroup(group)
-                model.setStartDate(startDate)
-                model.setEndDate(endDate)
+            if(savedInstanceState == null){
+                model.run{
+                    setGroup(group)
+                    setStartDate(startDate)
+                    setEndDate(endDate)
+                }
             }
         }
         model.getNotes().observe(this) {
@@ -99,33 +108,87 @@ class NotesActivity : AppCompatActivity() {
             }
         }
 
-        binding.selectionCancel.setOnClickListener {
-            for (position in selectedNotes.keys) {
-                val item = binding.notes.findViewHolderForAdapterPosition(position) as NoteAdapter.ViewHolder
-                item?.isSelected = false
-                listener.onNoteUnselected(selectedNotes[position]!!, position)
-            }
-        }
+        binding.selectionCancel.setOnClickListener{ resetSelection() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_notes_activity, menu)
+        val editItemView = menu?.findItem(R.id.action_edit)?.actionView as ImageView
+        editItemView.apply {
+            setPadding(20,10,20,10)
+            setImageResource(R.drawable.baseline_edit_document_36)
+            setOnClickListener{ openEditNote() }
+        }
+        val deleteItemView = menu.findItem(R.id.action_delete)?.actionView as ImageView
+        deleteItemView.apply {
+            setPadding(20,10,20,10)
+            setImageResource(R.drawable.baseline_delete_36)
+            setOnClickListener{ deleteNotes() }
+        }
+        val shareItemView = menu.findItem(R.id.action_share)?.actionView as ImageView
+        shareItemView.apply {
+            setPadding(20,10,20,10)
+            setImageResource(R.drawable.baseline_share_36)
+            setOnClickListener{ shareNotes() }
+        }
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_edit).setVisible(isEditAvailable)
-        menu.findItem(R.id.action_delete).setVisible(isDeleteAvailable)
-        menu.findItem(R.id.action_share).setVisible(isShareAvailable)
+        if (isEditChanged) {
+            toggleMenuItem(menu, R.id.action_edit, isEditAvailable)
+            isEditChanged = false
+        }
+        if (isDeleteChanged) {
+            toggleMenuItem(menu, R.id.action_delete, isDeleteAvailable)
+            isDeleteChanged = false
+        }
+        if (isShareChanged) {
+            toggleMenuItem(menu, R.id.action_share, isShareAvailable)
+            isShareChanged = false
+        }
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.action_share -> shareNotes()
-            R.id.action_delete -> deleteNotes()
-            R.id.action_edit -> openEditNote()
-            else -> super.onOptionsItemSelected(item)
+    /**
+     * Этот метод отвечает за появление/скрытие элемента меню.
+     */
+    private fun toggleMenuItem(menu: Menu, menuItemID: Int, isAvailable: Boolean) {
+        val open = AnimatorInflater
+            .loadAnimator(this, R.animator.menu_item_appear) as AnimatorSet
+        val close = AnimatorInflater
+            .loadAnimator(this, R.animator.menu_item_disappear) as AnimatorSet
+        val menuItem = menu.findItem(menuItemID)
+        if (isAvailable) {
+            open.setTarget(menuItem.actionView)
+            open.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    super.onAnimationStart(animation)
+                    menuItem.setVisible(true)
+                }
+            })
+            open.start()
+        } else {
+            close.setTarget(menuItem.actionView)
+            close.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    menuItem.setVisible(false)
+                }
+            })
+            close.start()
+        }
+    }
+
+    /**
+     * Этот метод сбрасывает выделение всех заметок.
+     */
+    private fun resetSelection() {
+        for (position in selectedNotes.keys) {
+            val item = binding.notes
+                .findViewHolderForAdapterPosition(position) as NoteAdapter.ViewHolder
+            item.isSelected  = false
+            listener.onNoteUnselected(selectedNotes[position]!!, position)
         }
     }
 
@@ -158,7 +221,7 @@ class NotesActivity : AppCompatActivity() {
      * Этот метод позволяет поделиться выбранными заметками.
      * @return
      */
-    private fun shareNotes(): Boolean {
+    private fun shareNotes() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setType("text/plain")
         var notes = ""
@@ -168,20 +231,18 @@ class NotesActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_TEXT, notes)
         val shareIntent = Intent.createChooser(intent, null)
         startActivity(shareIntent)
-        selectedNotes = java.util.HashMap()
+        resetSelection()
         decideMenuOptions()
-        return true
     }
 
     /**
      * Этот метод позволяет удалить выбранные заметки.
      * @return
      */
-    private fun deleteNotes(): Boolean {
+    private fun deleteNotes() {
         repository.deleteNotes(selectedNotes.values)
-        selectedNotes = java.util.HashMap()
+        resetSelection()
         decideMenuOptions()
-        return true
     }
 
     /**
@@ -189,19 +250,21 @@ class NotesActivity : AppCompatActivity() {
      * открыть экран приложения для ее редактирования.
      * @return
      */
-    private fun openEditNote(): Boolean {
+    private fun openEditNote() {
         val intent = Intent(this, EditNoteActivity::class.java)
         intent.putExtra("noteID", selectedNotes.entries.iterator().next().value.id)
         startActivity(intent)
-        selectedNotes = java.util.HashMap()
+        resetSelection()
         decideMenuOptions()
-        return true
     }
 
     /**
      * Этот метод позволяет определить, какие опции должны быть в меню.
      */
     private fun decideMenuOptions() {
+        isEditChanged = isEditAvailable != (selectedNotes.size == 1)
+        isShareChanged = isShareAvailable != (selectedNotes.isNotEmpty())
+        isDeleteChanged = isDeleteAvailable != (selectedNotes.isNotEmpty())
         isEditAvailable = selectedNotes.size == 1
         isShareAvailable = selectedNotes.isNotEmpty()
         isDeleteAvailable = selectedNotes.isNotEmpty()
