@@ -23,18 +23,18 @@
     <color name="gray_500">#9E9E9E</color>
     <color name="filterBorder">#121212</color>
 
-    <color name="colorPrimaryDay">#66a101</color>
-    <color name="colorSecondaryDay">#067138</color>
-    <color name="colorPrimaryDarkDay">#00574B</color>
-    <color name="colorAccentDay">#080c73</color>
-    <color name="colorTextDay">#000</color>
+    <color name="colorPrimaryDay">#006CA8</color>
+    <color name="colorSecondaryDay">#006CA8</color>
+    <color name="colorPrimaryDarkDay">#c2c2c2</color>
+    <color name="colorAccentDay">#808080</color>
+    <color name="colorTextDay">#121212</color>
     <color name="colorBackgroundDay">#FAFAFA</color>
     <color name="navigationBarColorDay">#DDD</color>
 
-    <color name="colorPrimaryNight">#00574B</color>
-    <color name="colorSecondaryNight">#06713B</color>
+    <color name="colorPrimaryNight">#004a9a</color>
+    <color name="colorSecondaryNight">#006CA8</color>
     <color name="colorPrimaryDarkNight">#121212</color>
-    <color name="colorAccentNight">#4169E1</color>
+    <color name="colorAccentNight">#e6e6e6</color>
     <color name="colorTextNight">#FFF</color>
     <color name="colorBackgroundNight">#303030</color>
     <color name="navigationBarColorNight">#121212</color>
