@@ -32,12 +32,12 @@ import java.util.Calendar
     primaryKeys = ["lessonDate", "lessonNumber", "groupName", "subjectName"])
 data class Lesson(
     @ColumnInfo(name = "lessonDate") val date : Calendar,
-    @ColumnInfo(name = "lessonNumber") val lessonNumber : String,
+    @ColumnInfo(name = "lessonNumber") var lessonNumber : String,
     @ColumnInfo(name="roomNumber") val roomNumber : String?,
     @ColumnInfo(name = "lessonTimes") val times : String?,
-    @ColumnInfo(name = "groupName") val groupName : String,
+    @ColumnInfo(name = "groupName") var groupName : String,
     @ColumnInfo(name = "subjectName") val subject : String,
-    @ColumnInfo(name = "teacherName") val teacher: String?
+    @ColumnInfo(name = "teacherName") var teacher: String?
 ){
     override fun toString(): String {
         val resources = ScheduleApp.getInstance().resources

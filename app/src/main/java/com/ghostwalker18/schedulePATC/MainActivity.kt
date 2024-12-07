@@ -14,15 +14,13 @@
 
 package com.ghostwalker18.schedulePATC
 
-import android.app.DownloadManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.ghostwalker18.schedulePATC.databinding.ActivityMainBinding
 
 /**
@@ -90,35 +88,41 @@ class MainActivity : AppCompatActivity() {
      */
     private fun downloadScheduleFile(): Boolean {
         Thread {
-            val linksForFirstCorpusSchedule =
-                ScheduleApp.getInstance()
-                    .getScheduleRepository()
-                    .getLinksForFirstCorpusSchedule()
-            val linksForSecondCorpusSchedule =
-                ScheduleApp.getInstance()
-                    .getScheduleRepository()
-                    .getLinksForSecondCorpusSchedule()
-            val linksForThirdCorpusSchedule =
-                ScheduleApp.getInstance()
-                    .getScheduleRepository()
-                    .getLinksForThirdCorpusSchedule()
             val links: MutableList<String> = ArrayList()
-            links.addAll(linksForFirstCorpusSchedule)
-            links.addAll(linksForSecondCorpusSchedule)
-            links.addAll(linksForThirdCorpusSchedule)
-            val downloadManager = application.getSystemService(DownloadManager::class.java)
-            for (link in links) {
-                val request =
-                    DownloadManager.Request(Uri.parse(link))
-                        .setMimeType("application/pdf")
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        .setTitle(getString(R.string.schedule))
-                        .setDestinationInExternalPublicDir(
-                            Environment.DIRECTORY_DOWNLOADS,
-                            ScheduleRepository.getNameFromLink(link)
-                        )
-                downloadManager.enqueue(request)
+            val downloadFor = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString("downloadFor", "all")
+            if (downloadFor.equals("all") || downloadFor.equals("first")){
+                val linksForFirstCorpusSchedule =
+                    ScheduleApp.getInstance()
+                        .getScheduleRepository()
+                        .getLinksForFirstCorpusSchedule()
+                links.addAll(linksForFirstCorpusSchedule)
             }
+            if (downloadFor.equals("all") || downloadFor.equals("second")){
+                val linksForSecondCorpusSchedule =
+                    ScheduleApp.getInstance()
+                        .getScheduleRepository()
+                        .getLinksForSecondCorpusSchedule()
+                links.addAll(linksForSecondCorpusSchedule)
+            }
+            if (downloadFor.equals("all") || downloadFor.equals("third")){
+                val linksForThirdCorpusSchedule =
+                    ScheduleApp.getInstance()
+                        .getScheduleRepository()
+                        .getLinksForThirdCorpusSchedule()
+                links.addAll(linksForThirdCorpusSchedule)
+            }
+            val downloadDialog = DownloadDialog()
+            val args = Bundle()
+            args.putInt("number_of_files", links.size)
+            args.putStringArray("links", links.toTypedArray<String>())
+            val mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            args.putString("mime_type", mimeType)
+            val downloadTitle = getString(R.string.days_tab)
+            args.putString("download_title", downloadTitle)
+            downloadDialog.arguments = args
+            downloadDialog.show(supportFragmentManager, "download")
         }.start()
         return true
     }
