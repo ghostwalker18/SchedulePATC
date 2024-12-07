@@ -85,20 +85,12 @@ class ScheduleItemActivity : AppCompatActivity() {
      * @return заголовок в строковом формате
      */
     private fun generateTitle(date: Calendar): String{
-        val title = getString(R.string.day_table)
-        val month = date[Calendar.MONTH] + 1
-        //Formatting month number with leading zero
-        var monthString = month.toString()
-        if (month < 10) {
-            monthString = "0$monthString"
+        var title = getString(R.string.day_table)
+        title = title + " " + Utils.generateDateForTitle(date)
+        if (Utils.isDateToday(date)) {
+            title = title + " - " + resources.getString(R.string.today)
         }
-        val day = date[Calendar.DAY_OF_MONTH]
-        var dayString = day.toString()
-        //Formatting day number with leading zero
-        if (day < 10) {
-            dayString = "0$dayString"
-        }
-        return "$title $dayString/$monthString"
+        return title
     }
 
     /**
@@ -118,7 +110,7 @@ class ScheduleItemActivity : AppCompatActivity() {
         }
     }
 
-    private fun addLesson(table: TableLayout ,tableRowLayout: Int, lesson: Lesson): TableRow{
+    private fun addLesson(table: TableLayout ,tableRowLayout: Int, lesson: Lesson): TableRow {
         return TableRow(this)
     }
 

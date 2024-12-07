@@ -287,18 +287,4 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
             })
         }
     }
-
-    companion object {
-        /**
-         * Этот метод позволяет получить имя скачиваемого файла из ссылки на него.
-         *
-         * @param link ссылка на файл
-         * @return имя файла
-         */
-        fun getNameFromLink(link: String): String {
-            val parts = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()
-            return parts[parts.size - 1]
-        }
-    }
 }

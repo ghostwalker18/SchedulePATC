@@ -113,7 +113,7 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
         }
 
         date.observe(viewLifecycleOwner) { date: Calendar ->
-            _isOpened = isDateToday(date)
+            _isOpened = Utils.isDateToday(date)
             binding.button.text = generateTitle(date, dayOfWeekID)
             lessons = repository.getLessons(
                 state.getGroup().value,
@@ -249,36 +249,11 @@ class ScheduleItemFragment : Fragment(), SharedPreferences.OnSharedPreferenceCha
      */
     private fun generateTitle(date: Calendar, dayOfWeekId: Int): String {
         val dayOfWeek = resources.getString(dayOfWeekId)
-        //Month is a number in 0 - 11
-        val month = date[Calendar.MONTH] + 1
-        //Formatting month number with leading zero
-        var monthString = month.toString()
-        if (month < 10) {
-            monthString = "0$monthString"
-        }
-        val day = date[Calendar.DAY_OF_MONTH]
-        var dayString = day.toString()
-        //Formatting day number with leading zero
-        if (day < 10) {
-            dayString = "0$dayString"
-        }
-        var label = "$dayOfWeek ($dayString/$monthString)"
-        if (isDateToday(date)) {
+        var label = dayOfWeek + " (" + Utils.generateDateForTitle(date) + ")"
+        if (Utils.isDateToday(date)) {
             label = label + " - " + resources.getString(R.string.today)
         }
         return label
-    }
-
-    /**
-     * Этот метод используется для проверки, является ли заданная дата сегодняшним днем.
-     * @param date дата для проверки
-     * @return
-     */
-    private fun isDateToday(date: Calendar): Boolean {
-        val rightNow = Calendar.getInstance()
-        return rightNow[Calendar.YEAR] == date[Calendar.YEAR] &&
-                rightNow[Calendar.MONTH] == date[Calendar.MONTH] &&
-                rightNow[Calendar.DAY_OF_MONTH] == date[Calendar.DAY_OF_MONTH]
     }
 
     /**
