@@ -93,7 +93,13 @@ class NotesActivity : AppCompatActivity() {
             }
         }
         model.getNotes().observe(this) {
-            notes -> binding.notes.adapter = NoteAdapter(notes!!, listener)
+            notes -> run {
+                if (notes?.size == 0)
+                    binding.noNotesNotification.visibility = View.VISIBLE
+                else
+                    binding.noNotesNotification.visibility = View.GONE
+                binding.notes.adapter = NoteAdapter(notes!!, listener)
+            }
         }
         filter = NotesFilterFragment()
         binding.filter.setOnClickListener{ openFilterFragment() }

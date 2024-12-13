@@ -13,6 +13,7 @@
   ~ limitations under the License.
   -->
 <resources>
+    <string name="no_notes_now">Әзірге жазбалар жоқ</string>
     <string name="download_approvement">Жүктеуді растау</string>
     <string name="download_notice">Жүктеуге арналған кесте файлдарының саны: %1$d. оларды жүктеп алғыңыз келе ме?</string>
     <string name="download_ok">Жүктеу</string>

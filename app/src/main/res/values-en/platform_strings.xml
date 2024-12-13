@@ -13,6 +13,7 @@
   ~ limitations under the License.
   -->
 <resources>
+    <string name="no_notes_now">There are no notes yet</string>
     <string name="download_approvement">Download confirmation</string>
     <string name="download_notice">Number of schedule files to download: %1$d. Do you want to download them?</string>
     <string name="download_ok">Download</string>

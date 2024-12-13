@@ -31,7 +31,7 @@ import java.util.Locale
  * </p>
  *
  * @author  Ипатов Никита
- * @version  1.0
+ * @since  1.0
  */
 class ScheduleApp: Application(), OnSharedPreferenceChangeListener {
     private lateinit var preferences: SharedPreferences
