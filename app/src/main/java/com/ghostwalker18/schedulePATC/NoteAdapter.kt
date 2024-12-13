@@ -42,6 +42,7 @@ class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerV
     private val listener: OnNoteClickListener
     private lateinit var context: android.content.Context
     private var canAccessPhoto by Delegates.notNull<Boolean>()
+    var isClickable: Boolean = true
 
     init {
         this.notes = notes
@@ -69,6 +70,9 @@ class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerV
         }
         if (note.photoID != null && !canAccessPhoto) holder.binding.error.setText(R.string.gallery_access_denied)
         holder.binding.note.setOnClickListener{
+            if (!isClickable){
+                return@setOnClickListener
+            }
             holder.isSelected = !holder.isSelected
             if (holder.isSelected) {
                 listener.onNoteSelected(note, position)

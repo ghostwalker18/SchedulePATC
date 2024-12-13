@@ -38,10 +38,16 @@ import java.util.Calendar
  * @since 1.0
  */
 class NotesFilterFragment : Fragment() {
+    interface VisibilityListener{
+        fun onFragmentShow()
+        fun onFragmentHide()
+    }
+
     private val repository = ScheduleApp.getInstance().getScheduleRepository()
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
     private lateinit var model: NotesModel
+    var listener: VisibilityListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +92,10 @@ class NotesFilterFragment : Fragment() {
             binding.endDate.text = DateConverters().toString(it)
         }
     }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener?.onFragmentShow()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -101,6 +111,7 @@ class NotesFilterFragment : Fragment() {
             .setCustomAnimations(R.anim.slide_in, R.anim.slide_out)
             .remove(this)
             .commit()
+        listener?.onFragmentHide()
     }
 
     /**

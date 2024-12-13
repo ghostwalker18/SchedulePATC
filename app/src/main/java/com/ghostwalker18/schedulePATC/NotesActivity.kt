@@ -102,6 +102,18 @@ class NotesActivity : AppCompatActivity() {
             }
         }
         filter = NotesFilterFragment()
+        filter.listener = object: NotesFilterFragment.VisibilityListener{
+            override fun onFragmentShow() {
+                val adapter = binding.notes.adapter as NoteAdapter
+                adapter.isClickable = false
+            }
+
+            override fun onFragmentHide() {
+                val adapter = binding.notes.adapter as NoteAdapter
+                adapter.isClickable = true
+            }
+
+        }
         binding.filter.setOnClickListener{ openFilterFragment() }
         binding.editNote.setOnClickListener{ openAddNote() }
         binding.search.apply {
