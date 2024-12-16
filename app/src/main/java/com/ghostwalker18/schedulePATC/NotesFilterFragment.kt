@@ -53,6 +53,7 @@ class NotesFilterFragment : Fragment() {
         super.onCreate(savedInstanceState)
         model = ViewModelProvider(requireActivity())[NotesModel::class.java]
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

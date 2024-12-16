@@ -17,7 +17,6 @@ package com.ghostwalker18.schedulePATC
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import java.util.Calendar
 
 /**

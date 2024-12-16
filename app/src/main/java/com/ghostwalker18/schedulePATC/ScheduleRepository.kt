@@ -31,14 +31,12 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
 /**
- * Этот класс представляет собой репозиторий данных прилвожения о расписании.
+ * Этот класс представляет собой репозиторий данных приложения о расписании.
  *
  * @author  Ипатов Никита
  * @since 1.0
  */
-class ScheduleRepository(context : Context, db : AppDatabase, networkService : NetworkService){
-    private val context: Context
-    private val db : AppDatabase
+class ScheduleRepository(val context : Context, val db : AppDatabase, networkService : NetworkService){
     private val preferences: SharedPreferences
     private val api : ScheduleNetworkAPI
     private val parser: IConverter = PDFToLessonsConverter()
@@ -47,8 +45,6 @@ class ScheduleRepository(context : Context, db : AppDatabase, networkService : N
     private val updateFutures: MutableList<Future<*>> = ArrayList()
 
     init{
-        this.context = context
-        this.db = db
         api = networkService.getScheduleAPI()
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
     }

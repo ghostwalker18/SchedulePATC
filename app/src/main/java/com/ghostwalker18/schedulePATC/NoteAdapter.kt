@@ -32,22 +32,17 @@ import kotlin.properties.Delegates
  * @author Ипатов Никита
  * @since 1.0
  */
-class NoteAdapter(notes: Array<Note>, listener: OnNoteClickListener) : RecyclerView.Adapter<NoteAdapter.ViewHolder>(){
+class NoteAdapter(private val notes: Array<Note>, private val listener: OnNoteClickListener) :
+    RecyclerView.Adapter<NoteAdapter.ViewHolder>(){
     interface OnNoteClickListener {
         fun onNoteSelected(note: Note, position: Int)
         fun onNoteUnselected(note: Note, position: Int)
     }
 
-    private val notes: Array<Note>
-    private val listener: OnNoteClickListener
     private lateinit var context: android.content.Context
     private var canAccessPhoto by Delegates.notNull<Boolean>()
     var isClickable: Boolean = true
 
-    init {
-        this.notes = notes
-        this.listener = listener
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
         val inflater = LayoutInflater.from(context)

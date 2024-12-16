@@ -21,6 +21,7 @@
         android:title="@string/edit"
         android:icon="@drawable/baseline_edit_document_36"
         android:orderInCategory="1"
+        app:actionViewClass="android.widget.ImageView"
         app:showAsAction="ifRoom"/>
 
     <item
@@ -28,6 +29,7 @@
         android:title="@string/delete"
         android:icon="@drawable/baseline_delete_36"
         android:orderInCategory="2"
+        app:actionViewClass="android.widget.ImageView"
         app:showAsAction="ifRoom"/>
 
     <item
@@ -35,5 +37,6 @@
         android:title="@string/share"
         android:icon="@drawable/baseline_share_36"
         android:orderInCategory="3"
+        app:actionViewClass="android.widget.ImageView"
         app:showAsAction="ifRoom"/>
 </menu>

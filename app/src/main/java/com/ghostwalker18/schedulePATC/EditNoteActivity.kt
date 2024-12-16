@@ -235,5 +235,4 @@ class EditNoteActivity : AppCompatActivity() {
             model.setDate(c)
         }
     }
-
 }

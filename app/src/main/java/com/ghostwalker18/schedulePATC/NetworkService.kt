@@ -28,17 +28,8 @@ import java.util.concurrent.Executors
  * @author Ipatov Nikita
  * @since 1.0
  */
-class NetworkService(context: Context, baseUri : String, preferences: SharedPreferences) {
+class NetworkService(val context: Context, private val baseUri : String, val preferences: SharedPreferences) {
     private val sizeOfCache: Long = 10 * 1024 * 1024
-    private val baseUri: String
-    private val context: Context?
-    private val preferences: SharedPreferences
-
-    init {
-        this.context = context
-        this.baseUri = baseUri
-        this.preferences = preferences
-    }
 
     /**
      * Этот метод позволяет получить API сайта ПТГХ.

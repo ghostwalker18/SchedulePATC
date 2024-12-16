@@ -23,12 +23,7 @@ import java.util.Calendar
  * @author Ипатов Никита
  * @since 1.0
  */
-class NotesRepository(db : AppDatabase) {
-    private val db: AppDatabase
-
-    init {
-        this.db = db
-    }
+class NotesRepository(private val db : AppDatabase) {
 
     /**
      * Этот метод позволяет сохранить заметку.
