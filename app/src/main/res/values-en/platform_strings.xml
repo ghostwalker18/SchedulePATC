@@ -63,4 +63,8 @@
     <string name="days_group_clear_descr">Clear group</string>
     <string name="days_teacher_clear_descr">Clear teacher</string>
     <string name="notes_selection_cancel_descr">"Сancel notes` selection "</string>
+    <string name="preview_next_descr">Show the next photo</string>
+    <string name="preview_previous_descr">Show the previous photo</string>
+    <string name="preview_photo_descr">Current photo</string>
+    <string name="preview_image_clear_descr">Clear photo</string>
 </resources>
