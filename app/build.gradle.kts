@@ -77,6 +77,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("com.google.guava:listenablefuture:1.0")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("org.jsoup:jsoup:1.12.2")
     implementation("com.tom-roush:pdfbox-android:2.0.27.0")
