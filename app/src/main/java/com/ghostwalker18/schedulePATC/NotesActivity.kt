@@ -204,7 +204,7 @@ class NotesActivity : AppCompatActivity() {
     private fun resetSelection() {
         for (position in selectedNotes.keys) {
             val item = binding.notes
-                .findViewHolderForAdapterPosition(position) as NoteAdapter.ViewHolder
+                .findViewHolderForAdapterPosition(position) as NoteViewHolder
             item.isSelected  = false
             listener.onNoteUnselected(selectedNotes[position]!!, position)
         }

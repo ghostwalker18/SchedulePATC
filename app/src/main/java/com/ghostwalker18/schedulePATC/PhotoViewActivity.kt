@@ -39,7 +39,7 @@ class PhotoViewActivity : AppCompatActivity() {
         }
         photoUri = Uri.parse(bundle.getString("photo_uri"))
         binding.photo.setImageURI(photoUri)
-        binding.backButton.setOnClickListener { finish() }
+        binding.backButton.setOnClickListener { finishAfterTransition() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

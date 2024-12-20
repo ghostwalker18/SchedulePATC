@@ -23,7 +23,6 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
@@ -51,7 +50,7 @@ class EditNoteActivity : AppCompatActivity() {
     private val nameSuffixGenerator = Random()
     private val takePhotoLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()) {
-        model.setPhotoID(photoUri)
+        photoUri?.let { it1 -> model.addPhotoID(it1) }
         MediaScannerConnection.scanFile(
             this,
             arrayOf(photoUri!!.encodedPath),
@@ -60,7 +59,7 @@ class EditNoteActivity : AppCompatActivity() {
         )
     }
     private val galleryPickLauncher = registerForActivityResult<String, Uri>(
-        ActivityResultContracts.GetContent()) { model.setPhotoID(it) }
+        ActivityResultContracts.GetContent()) { model.addPhotoID(it) }
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { granted ->
@@ -124,14 +123,9 @@ class EditNoteActivity : AppCompatActivity() {
             model.setGroup(binding.group.text.toString())
         }
 
-        binding.imageClear.setOnClickListener {
-            model.setPhotoID(null)
-            binding.imageClear.visibility = View.GONE
-        }
 
-        model.getPhotoID().observe(this){
-            binding.photoPreview.setImageURI(it)
-            binding.imageClear.visibility = View.VISIBLE
+        model.getPhotoIDs().observe(this){
+
         }
 
         binding.groupClear.setOnClickListener { model.setGroup("") }
@@ -145,12 +139,15 @@ class EditNoteActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        photoUri = model.getPhotoID().value
-        if (photoUri?.encodedPath != null && !isSaved) {
-            val photoFile = File(photoUri!!.encodedPath!!)
-            photoFile.delete()
+        model.getPhotoIDs().value?.run {
+            for (photoUri in this) {
+                if( !isSaved) {
+                    val photoFile = photoUri.encodedPath?.let { File(it) }
+                    photoFile?.delete()
+                }
+            }
         }
+        super.onDestroy()
     }
 
     /**
@@ -180,10 +177,13 @@ class EditNoteActivity : AppCompatActivity() {
      * Этот метод позволяет закрыть активность и освободить ресурсы.
      */
     private fun exitActivity() {
-        photoUri = model.getPhotoID().value
-        photoUri?.encodedPath?.run {
-            val photoFile = File(photoUri!!.encodedPath!!)
-            photoFile.delete()
+        model.getPhotoIDs().value?.run{
+            for (photoUri in this) {
+                if (!isSaved) {
+                    val photoFile = photoUri.encodedPath?.let { File(it) }
+                    photoFile?.delete()
+                }
+            }
         }
         finish()
     }

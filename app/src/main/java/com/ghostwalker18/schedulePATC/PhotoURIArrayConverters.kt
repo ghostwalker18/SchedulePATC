@@ -15,6 +15,15 @@ package com.ghostwalker18.schedulePATC
 
 import android.net.Uri
 import androidx.room.TypeConverter
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
+import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 /**
@@ -33,7 +42,12 @@ class PhotoURIArrayConverters {
      */
     @TypeConverter
     fun toString(uris: ArrayList<Uri?>?): String? {
-        return if (uris == null || uris.size == 0) null else com.google.gson.Gson().toJson(uris)
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
+            .create()
+        if (uris.isNullOrEmpty()) return null
+        val listType = object : TypeToken<java.util.ArrayList<Uri?>?>() {}.type
+        return gson.toJson(uris, listType)
     }
 
     /**
@@ -44,8 +58,37 @@ class PhotoURIArrayConverters {
      */
     @TypeConverter
     fun fromString(uriString: String?): ArrayList<Uri>? {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
+            .create()
         if (uriString == null) return null
-        val listType: Type = object : com.google.gson.reflect.TypeToken<ArrayList<Uri?>?>() {}.type
-        return com.google.gson.Gson().fromJson<ArrayList<Uri>>(uriString, listType)
+        val listType = object : TypeToken<java.util.ArrayList<Uri?>>() {}.type
+        return gson.fromJson(uriString, listType)
+    }
+
+    /**
+     * Этот класс используется для конвертации Uri в Json и наоборот.
+     *
+     * @author Ипатов Никита
+     * @since 3.2
+     */
+    private inner class UriJsonAdapter : JsonSerializer<Uri?>,
+        JsonDeserializer<Uri?> {
+        @Throws(JsonParseException::class)
+        override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext
+        ): Uri {
+            return try {
+                val uri = json.asString
+                if (uri.isNullOrEmpty()) Uri.EMPTY
+                else Uri.parse(uri)
+            } catch (e: UnsupportedOperationException) {
+                Uri.EMPTY
+            }
+        }
+
+        override fun serialize(src: Uri?, typeOfSrc: Type, context: JsonSerializationContext
+        ): JsonElement {
+            return JsonPrimitive(src.toString())
+        }
     }
 }

@@ -18,7 +18,6 @@ import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import java.util.Calendar
 
 /**
@@ -36,8 +35,7 @@ data class Note(
     @ColumnInfo(name = "noteGroup") var group : String,
     @ColumnInfo(name = "noteTheme") var theme: String?,
     @ColumnInfo(name = "noteText") var text: String,
-    @TypeConverters(PhotoURIArrayConverters::class)
-    @ColumnInfo(name = "notePhotoID") var photoID: ArrayList<Uri>?
+    @ColumnInfo(name = "notePhotoID") var photoIDs: ArrayList<Uri>?
 ){
     override fun toString(): String {
         val resources = ScheduleApp.getInstance().resources

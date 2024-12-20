@@ -28,7 +28,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * @since 1.0
  */
 @Database(entities = [Lesson::class, Note:: class], version = 1)
-@TypeConverters(DateConverters::class)
+@TypeConverters(DateConverters::class, PhotoURIArrayConverters::class)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun lessonDao() : LessonDao
     abstract fun noteDao() : NoteDao
