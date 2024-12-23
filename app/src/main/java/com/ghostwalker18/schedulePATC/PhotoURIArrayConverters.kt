@@ -79,7 +79,7 @@ class PhotoURIArrayConverters {
      * Этот класс используется для конвертации Uri в Json и наоборот.
      *
      * @author Ипатов Никита
-     * @since 3.2
+     * @since 1.0
      */
     private inner class UriJsonAdapter : JsonSerializer<Uri?>,
         JsonDeserializer<Uri?> {

@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
@@ -44,7 +45,8 @@ import java.util.Random
  */
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
-    private lateinit var model: EditNoteModel
+    private val model: EditNoteModel by viewModels()
+    private lateinit var preview: PreviewFragment
     private var photoUri: Uri? = null
     private var isSaved = false
     private val nameSuffixGenerator = Random()
@@ -90,8 +92,6 @@ class EditNoteActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        model = ViewModelProvider(this)[EditNoteModel::class.java]
-
         val bundle = intent.extras
         bundle?.run {
             if (bundle.getInt("noteID") != 0) {
@@ -124,9 +124,10 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
 
-        model.getPhotoIDs().observe(this){
-
-        }
+        preview = supportFragmentManager.findFragmentById(R.id.preview) as PreviewFragment
+        preview.setEditable(true)
+        preview.setListener { uri -> model.removePhotoID(uri)}
+        model.getPhotoIDs().observe(this) { photoIDs -> preview.setImageIDs(photoIDs) }
 
         binding.groupClear.setOnClickListener { model.setGroup("") }
         binding.themeClear.setOnClickListener { model.setTheme("") }

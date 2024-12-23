@@ -31,14 +31,10 @@ class PreviewFragment : Fragment() {
     /**
      * Этот интерфейс задает слушателя события удаления изображения из галереи превью.
      */
-    interface DeleteListener {
-        fun onPhotoDelete(uri: Uri)
-    }
-
-    private var listener: DeleteListener? = null
+    private var listener: ((Uri) -> Unit)? = null
     private var isEditable = false
     private var currentItem = 0
-    private var photoUris: ArrayList<Uri> = ArrayList()
+    private var photoUris: ArrayList<Uri>? = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -63,12 +59,12 @@ class PreviewFragment : Fragment() {
             }
         })
         binding.preview.setOnClickListener {
-            if (photoUris.isNotEmpty()) {
+            if (photoUris?.isNotEmpty() == true) {
                 val intent = Intent(
                     requireActivity(),
                     PhotoViewActivity::class.java
                 )
-                intent.putExtra("photo_uri", photoUris[currentItem].toString())
+                intent.putExtra("photo_uri", photoUris!![currentItem].toString())
                 startActivity(intent)
             }
         }
@@ -87,17 +83,17 @@ class PreviewFragment : Fragment() {
      * Этот метод используется для задания списка URI отображаемых фотографий.
      * @param uris отображаемые фотографии
      */
-    fun setImageIDs(uris: java.util.ArrayList<Uri>) {
+    fun setImageIDs(uris: ArrayList<Uri>?) {
         photoUris = uris
-        if (photoUris.size > 0)
-            binding.preview.setImageURI(photoUris[photoUris.size - 1])
-        binding.delete.visibility = if(photoUris.size > 0) View.VISIBLE else View.GONE
+        if (photoUris?.isNotEmpty() == true)
+            binding.preview.setImageURI(photoUris!![photoUris!!.size - 1])
+        binding.delete.visibility = if(photoUris?.isNotEmpty() == true) View.VISIBLE else View.GONE
     }
 
     /**
      * Этот метод задает слушателя события удаления фото.
      */
-    fun setListener(listener: DeleteListener) {
+    fun setListener(listener: (Uri) -> Unit) {
         this.listener = listener
     }
 
@@ -113,11 +109,11 @@ class PreviewFragment : Fragment() {
      * Этот метод используется для отображения следущего фото.
      */
     private fun showNextPhoto() {
-        if (photoUris.isNotEmpty()) {
+        if (photoUris?.isNotEmpty() == true) {
             currentItem++
-            if (currentItem >= photoUris.size)
+            if (currentItem >= photoUris!!.size)
                 currentItem = 0
-            binding.preview.setImageURI(photoUris[currentItem])
+            binding.preview.setImageURI(photoUris!![currentItem])
         }
     }
 
@@ -125,10 +121,10 @@ class PreviewFragment : Fragment() {
      * Этот метод используется для отображения предыдущего фото
      */
     private fun showPreviousPhoto() {
-        if (photoUris.isNotEmpty()) {
+        if (photoUris?.isNotEmpty() == true) {
             currentItem--
-            if (currentItem < 0) currentItem = photoUris.size - 1
-            binding.preview.setImageURI(photoUris[currentItem])
+            if (currentItem < 0) currentItem = photoUris!!.size - 1
+            binding.preview.setImageURI(photoUris!![currentItem])
         }
     }
 
@@ -136,19 +132,19 @@ class PreviewFragment : Fragment() {
      * Этот метод используется для удаления текущей фотографии из списка
      */
     private fun deletePhoto() {
-        if (isEditable && photoUris.isNotEmpty()) {
-            val deletedUri = photoUris.removeAt(currentItem)
-            if (photoUris.isEmpty()) {
+        if (isEditable && photoUris?.isNotEmpty() == true) {
+            val deletedUri = photoUris!!.removeAt(currentItem)
+            if (photoUris!!.isEmpty()) {
                 binding.preview.setImageResource(R.drawable.baseline_no_photography_72)
                 binding.delete.visibility = View.GONE
                 return
             }
             currentItem--
             if (currentItem < 0)
-                currentItem = photoUris.size - 1
-            if (currentItem < photoUris.size)
-                binding.preview.setImageURI(photoUris[currentItem])
-            listener?.onPhotoDelete(deletedUri)
+                currentItem = photoUris!!.size - 1
+            if (currentItem < photoUris!!.size)
+                binding.preview.setImageURI(photoUris!![currentItem])
+            listener?.invoke(deletedUri)
         }
     }
 }

@@ -32,7 +32,7 @@ import com.ghostwalker18.schedulePATC.databinding.FragmentNoteBinding
 class NoteViewHolder(itemView: View, val context: Context) : RecyclerView.ViewHolder(itemView){
     private var currentItem = 0
     private var photoUris: ArrayList<Uri>? = null
-    private lateinit var binding:FragmentNoteBinding
+    private lateinit var binding: FragmentNoteBinding
     var isSelected = false
         set(value) {
             field = value
