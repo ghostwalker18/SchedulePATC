@@ -14,6 +14,7 @@
 
 package com.ghostwalker18.schedulePATC
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -40,10 +41,21 @@ class PhotoViewActivity : AppCompatActivity() {
         photoUri = Uri.parse(bundle.getString("photo_uri"))
         binding.photo.setImageURI(photoUri)
         binding.backButton.setOnClickListener { finishAfterTransition() }
+        binding.shareButton.setOnClickListener { sharePhoto() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("photo_uri", photoUri.toString())
         super.onSaveInstanceState(outState)
+    }
+
+    /**
+     * Этот метод используетсяя чтобы поделиться отображаемым фото.
+     */
+    private fun sharePhoto() {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("image/*")
+        shareIntent.putExtra(Intent.EXTRA_STREAM, photoUri)
+        startActivity(Intent.createChooser(shareIntent, null))
     }
 }
