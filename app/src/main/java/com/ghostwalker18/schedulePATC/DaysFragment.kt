@@ -126,7 +126,8 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
                 run {
                     val group = adapterView.getItemAtPosition(i).toString()
                     state.setGroup(group)
-                    val input = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val input = context
+                        ?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     input.hideSoftInputFromWindow(view.applicationWindowToken, 0)
                 }
             }
@@ -157,7 +158,8 @@ class DaysFragment: Fragment(), OnSharedPreferenceChangeListener {
                 run {
                     val teacher = adapterView.getItemAtPosition(i).toString()
                     state.setTeacher(teacher)
-                    val input = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val input = context
+                        ?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     input.hideSoftInputFromWindow(view.applicationWindowToken, 0)
                 }
                 addTextChangedListener {

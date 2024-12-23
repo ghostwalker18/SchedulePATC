@@ -41,13 +41,17 @@ class PhotoURIArrayConverters {
      * @return
      */
     @TypeConverter
-    fun toString(uris: ArrayList<Uri?>?): String? {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
-            .create()
-        if (uris.isNullOrEmpty()) return null
-        val listType = object : TypeToken<java.util.ArrayList<Uri?>?>() {}.type
-        return gson.toJson(uris, listType)
+    fun toString(uris: ArrayList<Uri>?): String? {
+        return try{
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
+                .create()
+            if (uris.isNullOrEmpty()) return null
+            val listType = object : TypeToken<java.util.ArrayList<Uri?>?>() {}.type
+            gson.toJson(uris, listType)
+        } catch (e: Exception){
+            null
+        }
     }
 
     /**
@@ -58,12 +62,17 @@ class PhotoURIArrayConverters {
      */
     @TypeConverter
     fun fromString(uriString: String?): ArrayList<Uri>? {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
-            .create()
-        if (uriString == null) return null
-        val listType = object : TypeToken<java.util.ArrayList<Uri?>>() {}.type
-        return gson.fromJson(uriString, listType)
+        return try{
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Uri::class.java, UriJsonAdapter())
+                .create()
+            if (uriString == null) return null
+            val listType = object : TypeToken<java.util.ArrayList<Uri?>>() {}.type
+            gson.fromJson(uriString, listType)
+        } catch (e: Exception){
+            null
+        }
+
     }
 
     /**

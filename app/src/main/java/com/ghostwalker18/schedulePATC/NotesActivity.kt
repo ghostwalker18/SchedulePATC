@@ -237,7 +237,6 @@ class NotesActivity : AppCompatActivity() {
 
     /**
      * Этот метод позволяет поделиться выбранными заметками.
-     * @return
      */
     private fun shareNotes() {
         val intent = Intent(Intent.ACTION_SEND)
@@ -255,7 +254,6 @@ class NotesActivity : AppCompatActivity() {
 
     /**
      * Этот метод позволяет удалить выбранные заметки.
-     * @return
      */
     private fun deleteNotes() {
         repository.deleteNotes(selectedNotes.values)
@@ -266,7 +264,6 @@ class NotesActivity : AppCompatActivity() {
     /**
      * Этот метод позволяет, если выбранна одна заметка,
      * открыть экран приложения для ее редактирования.
-     * @return
      */
     private fun openEditNote() {
         val intent = Intent(this, EditNoteActivity::class.java)

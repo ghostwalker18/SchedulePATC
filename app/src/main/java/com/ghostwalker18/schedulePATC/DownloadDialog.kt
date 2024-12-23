@@ -38,11 +38,13 @@ class DownloadDialog : DialogFragment() {
         DialogInterface.OnClickListener { _: DialogInterface?, which: Int ->
             if (which == Dialog.BUTTON_POSITIVE) {
                 Thread {
-                    val downloadManager = requireActivity().getSystemService(DownloadManager::class.java)
+                    val downloadManager = requireActivity()
+                        .getSystemService(DownloadManager::class.java)
                     for (link in links) {
                         val request = DownloadManager.Request(Uri.parse(link))
                                 .setMimeType(mimeTypeOfFilesToDownload)
-                                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                                .setNotificationVisibility(
+                                    DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                                 .setTitle(downloadTitle)
                                 .setDestinationInExternalPublicDir(
                                     Environment.DIRECTORY_DOWNLOADS,
